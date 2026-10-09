@@ -1,0 +1,13 @@
+import type { ToolDefinition } from '../types.js';
+import { tokenSchema, generateTokens, brandSchema, mapBrand } from '../design/tokens.js';
+import { recipeSchema, componentRecipe } from '../design/recipes.js';
+import { uiReviewSchema, tokenReviewSchema, reviewUi, reviewTokens } from '../design/review.js';
+
+/** Pure deterministic design tools: no model, browser, network, or filesystem side effects. */
+export const designTools: ToolDefinition[] = [
+  {name:'material_generate_tokens',description:'Generate real HCT-derived Material semantic light/dark color roles, full typography scale, spacing, optional shape/motion CSS, and calculated opaque sRGB contrast pairs. Default olive #546a2f; expressive/minimal/editorial/lab are authored adaptations, not official conformance claims.',inputSchema:tokenSchema,run:input=>generateTokens(tokenSchema.parse(input))},
+  {name:'material_map_brand_to_tokens',description:'Map a named hex brand palette (primary, secondary, tertiary, neutral, error) into HCT tonal roles. Returns generated CSS, provenance, contrast, unmet constraints, and unused keys. Constraints support mode, styleProfile, fontProfile, and minContrast; thresholds are checked, not silently promised.',inputSchema:brandSchema,run:input=>mapBrand(brandSchema.parse(input))},
+  {name:'material_component_recipe',description:'Create tokenized plain HTML/CSS/vanilla JS recipes for button, card, navigation rail, chip, text field, dialog, snackbar, or list. Includes usage/anatomy/variants/component-specific states/accessibility. web aliases plain-html-css; React and Material Web are explicitly unsupported. projectStyle is a profile name; accessibility supports targetSize standard/large and reducedMotion.',inputSchema:recipeSchema,run:input=>componentRecipe(recipeSchema.parse(input))},
+  {name:'material_review_ui_code',description:'Bounded deterministic HTML/CSS advisory review: structural names/labels, inline click semantics, focus suppression, literal color usage, and local opaque hex contrast. Findings include rule IDs, confidence, evidence, fixes, and limitations. Native focus is acceptable; this is not a browser audit or WCAG certificate.',inputSchema:uiReviewSchema,run:input=>reviewUi(uiReviewSchema.parse(input))},
+  {name:'material_review_tokens',description:'Parse token CSS and report missing semantic pairs, unresolved local references, and calculated co-declared opaque hex contrast. Literal colors in token definitions are allowed. Host imports/cascade and target-style conformance cannot be proven statically; output is advisory.',inputSchema:tokenReviewSchema,run:input=>reviewTokens(tokenReviewSchema.parse(input))},
+];

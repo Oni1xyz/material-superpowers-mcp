@@ -1,0 +1,130 @@
+# Material Superpowers MCP
+
+A local, unofficial Material 3 toolkit for coding agents. Generate brand-adapted tokens and component recipes, retrieve cached official documentation, review source, and emit an executable UI evaluation plan. Browser tests run separately—not inside MCP tool calls.
+
+Private project: https://github.com/Oni1xyz/material-superpowers-mcp
+
+## What exists
+
+Ten stdio tools:
+
+| Tool | Capability |
+| --- | --- |
+| `material_search_docs` | Search the local official-source cache |
+| `material_read_doc` | Read a cached page or heading with provenance |
+| `material_get_context` | Gather bounded, cited excerpts for a task |
+| `material_generate_tokens` | Material Color Utilities HCT schemes, light/dark, CSS roles and contrast calculations |
+| `material_map_brand_to_tokens` | Deterministic brand-role mapping with warnings |
+| `material_component_recipe` | Plain HTML/CSS/JS for button, card, navigation, chip, text field, dialog, snackbar and list |
+| `material_review_ui_code` | Bounded heuristic findings with evidence, fixes and uncertainty |
+| `material_review_tokens` | Role/contrast/style-token checks |
+| `material_plan_screen` | Authored screen patterns and explicit unresolved requirements |
+| `material_generate_eval_plan` | Structured checks, manual checklist, and executable Playwright module |
+
+These are deterministic tools, not a second hidden LLM. The calling agent interprets requirements and performs implementation. Profiles and recipes are authored adaptations, not official Google components or a guarantee of full M3 Expressive fidelity. Unsupported platforms and variants fail explicitly; React code generation is not implemented.
+
+## Install and verify
+
+Node >=20.19 is required. Tested with Node 20.20.1. Use the exact lockfile; install lifecycle scripts remain disabled.
+
+```sh
+npm ci --ignore-scripts --engine-strict
+npm run check:dependencies
+npm audit --audit-level=high
+npm test
+npm run build
+npm run evals
+npm run smoke
+```
+
+The test suite includes real-browser focus regressions. An installed Chrome/Chromium is required; on a clean machine run the explicit browser setup described below before `npm test`. Missing browsers fail rather than silently skipping those tests.
+
+`smoke` uses the real SDK stdio client, discovers and calls all ten tools, and checks invalid inputs. Without a documentation cache, it verifies the explicit missing-cache error rather than pretending to retrieve docs.
+
+### Documentation import (explicit network access)
+
+```sh
+npm run refresh-cache
+npm run smoke -- --require-cache
+```
+
+The importer attempts a rendered `m3.material.io` button article, then imports a small fixed official Material Web Markdown catalog. The M3 SPA import can fail under the restrictive browser network policy; this is reported, not hidden. The currently exercised fallback corpus covers buttons, dialogs, chips, text fields, color and typography. This is NOT a complete index of m3.material.io: foundations, navigation and many other topics are not yet in the cache.
+
+Every imported document includes URL, fetch time, SHA-256, source kind and extraction method. The cache is ignored by git. Missing/invalid cache produces an actionable error; failed refresh preserves the previous cache. Do not confuse authored guidance with retrieved official excerpts.
+
+By default the cache lives at `.cache/material` relative to the process working directory. Set `MATERIAL_CACHE_DIR` to an absolute directory when an MCP client launches the server elsewhere.
+
+## Connect an MCP client
+
+After building, launch `node /absolute/path/material-superpowers-mcp/dist/index.js` using stdio, with `MATERIAL_CACHE_DIR` pointing to the imported cache. No API keys are required. Keep sampling disabled in clients that offer it.
+
+Generic client configuration (replace both paths):
+
+```json
+{
+  "mcpServers": {
+    "material_superpowers": {
+      "command": "node",
+      "args": ["/absolute/path/material-superpowers-mcp/dist/index.js"],
+      "env": {
+        "MATERIAL_CACHE_DIR": "/absolute/path/material-superpowers-mcp/.cache/material"
+      }
+    }
+  }
+}
+```
+
+No global agent configuration is changed by installation. MCP client schemas differ; use the client's documented configuration format.
+
+## Browser evaluation
+
+```sh
+npm run evals:ui
+```
+
+Uses installed Chrome/Chromium or an already installed Playwright Chromium binary. Optional override:
+
+```sh
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome npm run evals:ui
+```
+
+If no browser is installed, an explicit `npx --no-install playwright install chromium` downloads the pinned browser; system dependencies may also be needed. This is an operator step, never an install lifecycle hook or MCP tool side effect.
+
+The harness builds a local fixture from actual token/recipe outputs, executes the exact generated eval module, and runs independently authored acceptance checks. It tests a good fixture and an intentionally broken fixture. Checks include axe serious/critical findings, computed focus-indicator change, dialog dismissal/focus return, confirmation/cancellation side effects, overflow and reduced motion across three viewports. A successful automated run still reports outstanding manual checks.
+
+Outputs under ignored `artifacts/ui/` include screenshots, served HTML, plan/module, provenance and `report.json`. See [evaluation protocol](evals/benchmark.md) for scope and limitations. Screenshots are captures, not approved visual-regression baselines. Human usability, assistive-technology review and controlled agent-uplift benchmarking have not been completed.
+
+## Docker runtime
+
+```sh
+docker build -t material-superpowers-mcp:local .
+npm run smoke -- --docker
+```
+
+Runtime is non-root and can operate without network. To use imported docs:
+
+```sh
+docker run --rm -i --network none \
+  -v "$PWD/.cache/material:/app/.cache/material:ro" \
+  material-superpowers-mcp:local
+```
+
+Without the mount, non-docs tools work and docs tools return the missing-cache error. The runtime image does not run crawlers or browsers.
+
+## Security and limitations
+
+- Tool handlers have no shell, browser, model calls, or network access.
+- Import network access is constrained to fixed official sources; ordinary reads do not refresh implicitly.
+- Browser harness targets an ephemeral localhost fixture and blocks outside-origin browser requests. This is not a general OS network sandbox.
+- Dependency versions are exact-pinned; the lockfile and metadata check enforce the seven-day release-age policy. Docker and CI actions are pinned.
+- Static review cannot fully resolve CSS cascade, JS behavior, screen readers or human task success. Findings are advisory, not WCAG certification.
+- Free-text custom flows and requirements stay outstanding until implemented and independently checked. Generated tests cannot certify their own completeness.
+- No npm publication, public hosting, credentials or telemetry required.
+
+## Development
+
+Plan: [implementation and acceptance](docs/plans/implementation.md).
+Design behavior: [design evaluation notes](evals/design-evaluation.md).
+Research gate: [controlled A/B benchmark](evals/benchmark.md).
+
+Official documentation and Material names/assets remain subject to their owners' licenses. Imported Material Web docs identify Apache-2.0 provenance; M3 site content must be checked against applicable terms before redistribution. This project is not endorsed by Google.

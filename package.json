@@ -1,0 +1,50 @@
+{
+  "name": "material-superpowers-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "bin": {
+    "material-superpowers-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "smoke": "node scripts/smoke.mjs",
+    "refresh-cache": "tsx scripts/refresh-cache.ts",
+    "evals": "tsx scripts/evals.ts",
+    "evals:ui": "tsx evals/run-ui.ts",
+    "check:dependencies": "node scripts/check-dependencies.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.0",
+    "zod": "3.25.76",
+    "@material/material-color-utilities": "0.3.0",
+    "postcss": "8.5.28",
+    "parse5": "8.0.1"
+  },
+  "overrides": {
+    "@hono/node-server": "2.1.3",
+    "express": "5.2.1",
+    "express-rate-limit": "8.7.0",
+    "hono": "4.13.12",
+    "nanoid": "3.3.19",
+    "playwright-core": "1.63.0",
+    "postcss": "8.5.28",
+    "vite": "7.3.6",
+    "rollup": "4.64.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "4.1.11",
+    "tsx": "4.23.15",
+    "@types/node": "20.19.43",
+    "@playwright/test": "1.63.0",
+    "playwright": "1.63.0",
+    "@axe-core/playwright": "4.13.0"
+  }
+}
