@@ -243,9 +243,12 @@ describe('standalone emitted runner network boundary', () => {
       expect(connections).toBe(0);
       expect(peerRequests).toBe(0);
       expect(errors).toEqual([]);
-      // Behavioral proof that the HTTP guard was actually removed, not just called.
-      expect(await page.evaluate(url => fetch(url).then(response => response.text()), peerOrigin + '/probe')).toBe('local probe');
-      expect(peerRequests).toBe(1);
+      // Navigate off-origin after cleanup: a leaked runner guard would abort.
+      // Navigation avoids newer Chromium's local-network/CORS checks on fetch
+      // from a page previously fulfilled through Playwright's API transport.
+      await page.goto(peerOrigin + '/probe');
+      expect(await page.locator('body').innerText()).toBe('local probe');
+      expect(peerRequests).toBeGreaterThanOrEqual(1); // Browsers may also request a favicon after navigation.
     } finally {
       vi.restoreAllMocks();
       await context.close(); // The supported way to dispose the context's sole WS blocker.
