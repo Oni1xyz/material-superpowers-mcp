@@ -1,4 +1,5 @@
-import { chromium } from 'playwright';
+import { M3_ORIGIN, discoverMainScript, discoverBundle, parseSitemap, mapCanonicalRoutes, validateM3Url } from '../src/material/discovery.js';
+import { sha256 } from '../src/material/cache.js';
 import { renderedSource, validateSourceUrl, type DocSource } from '../src/material/sources.js';
 /** Only hashed Angular application assets on the exact official host are eligible.
  * Images, fonts, telemetry, third-party scripts, XHR APIs, downloads and service workers are blocked.
@@ -15,7 +16,7 @@ export async function boundedFetch(url:string,options:FetchOptions={}) {
   const signal=AbortSignal.timeout(options.timeoutMs??15000);
   let current=validate(url);
   for(let redirect=0;redirect<=3;redirect++) {
-    const response=await fetcher(current,{redirect:'manual',signal,headers:{'User-Agent':'Material-Superpowers-Explicit-Docs-Refresh/0.1','Accept':'text/plain,text/html,application/javascript,text/css'}});
+    const response=await fetcher(current,{redirect:'manual',signal,headers:{'User-Agent':'Material-Superpowers-Explicit-Docs-Refresh/0.1','Accept':'application/json,application/xml,text/plain,text/html,application/javascript,text/css'}});
     if([301,302,303,307,308].includes(response.status)) {
       const location=response.headers.get('location');await response.body?.cancel();
       if(!location)throw new Error('Redirect without location');
@@ -30,35 +31,22 @@ export async function boundedFetch(url:string,options:FetchOptions={}) {
     const reader=response.body?.getReader();if(!reader)throw new Error('Empty source body');
     const chunks:Uint8Array[]=[];let size=0;
     try {while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>max)throw new Error('Source exceeds size limit');chunks.push(value);}} finally {await reader.cancel();}
-    return {text:Buffer.concat(chunks).toString('utf8'),finalUrl:current,contentType:response.headers.get('content-type')??''};
+    return {text:new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(Buffer.concat(chunks)),finalUrl:current,contentType:response.headers.get('content-type')??''};
   }
   throw new Error('Too many official-source redirects');
+}
+export async function discoverOfficialM3() {
+  const [home,sitemap]=await Promise.all([
+    boundedFetch(M3_ORIGIN+'/',{validate:validateM3Url,maxBytes:2_000_000}),
+    boundedFetch(M3_ORIGIN+'/sitemap.xml',{validate:validateM3Url,maxBytes:2_000_000}),
+  ]);
+  const bundleUrl=discoverMainScript(home.text);
+  const bundle=await boundedFetch(bundleUrl,{validate:validateM3Url,maxBytes:16_000_000,timeoutMs:30000});
+  const discovered=discoverBundle(bundle.text),entries=parseSitemap(sitemap.text);
+  return {...discovered,entries,mappings:mapCanonicalRoutes(entries,discovered.routes),bundleUrl,bundleSha256:sha256(bundle.text),sitemapSha256:sha256(sitemap.text),discoveredAt:new Date().toISOString()};
 }
 export async function importMarkdown(source:DocSource) {
   const result=await boundedFetch(source.url);
   if(!result.contentType.includes('text/plain')||!/^# /m.test(result.text)||/<html[\s>]/i.test(result.text))throw new Error('Expected official Markdown, not HTML or a login page');
-  return {...result,method:'raw-markdown-verbatim (official Material Web implementation documentation; fallback for M3 rendered site)'};
-}
-export async function importRenderedArticle() {
-  const browser=await chromium.launch({headless:true,timeout:15000,executablePath:process.env.MATERIAL_CHROMIUM_EXECUTABLE||undefined});
-  let requests=0,totalBytes=0;
-  try {
-    const context=await browser.newContext({serviceWorkers:'block',acceptDownloads:false,javaScriptEnabled:true});
-    await context.routeWebSocket('**/*', socket => socket.close());
-    await context.route('**/*',async route=>{
-      try {
-        if(++requests>30||route.request().method()!=='GET')throw new Error('Render request limit');
-        const result=await boundedFetch(route.request().url(),{validate:validateRenderUrl,maxBytes:4000000,timeoutMs:10000});
-        totalBytes+=Buffer.byteLength(result.text);if(totalBytes>16000000)throw new Error('Render total size limit');
-        await route.fulfill({status:200,contentType:result.contentType,body:result.text});
-      } catch {await route.abort('blockedbyclient');}
-    });
-    const page=await context.newPage();
-    page.setDefaultTimeout(12000);
-    await page.goto(renderedSource.url,{waitUntil:'domcontentloaded',timeout:20000});
-    await page.locator('main, article, [role="main"]').first().waitFor({state:'visible'});
-    const text=await page.locator('main, article, [role="main"]').first().innerText();
-    if(text.length<500||!/button/i.test(text)||text.length>200000)throw new Error('No substantive rendered button article under restrictive resource policy');
-    return {text,finalUrl:renderedSource.url,method:'playwright-rendered-main-innerText (restricted official Angular assets; third-party resources blocked)'};
-  } finally {await browser.close();}
+  return {...result,method:'raw-markdown-verbatim (official Material Web implementation documentation; legacy fallback)'};
 }

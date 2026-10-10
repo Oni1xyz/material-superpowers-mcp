@@ -4,7 +4,8 @@ import type { ToolDefinition } from './types.js';
 import { docsTools } from './tools/docs.js';
 import { designTools } from './tools/design.js';
 import { planningTools } from './tools/planning.js';
-export const allTools: ToolDefinition[] = [...docsTools,...designTools,...planningTools];
+import { makeResourceTools } from './tools/resources.js';
+export const allTools: ToolDefinition[] = [...docsTools,...makeResourceTools(),...designTools,...planningTools];
 
 /** Serialize only bounded JSON data. Checking JSON.stringify(result).length is
  * too late: a small graph with repeated strings/references can exhaust the heap.
@@ -83,7 +84,7 @@ export async function executeTool(tool: ToolDefinition, input: unknown): Promise
   }
 }
 export function createServer() {
-  if(allTools.length!==10 || new Set(allTools.map(t=>t.name)).size!==10)throw new Error('Expected exactly ten unique Material tools');
+  if(allTools.length!==12 || new Set(allTools.map(t=>t.name)).size!==12)throw new Error('Expected exactly twelve unique Material tools');
   const server=new McpServer({name:'material-superpowers-mcp',version:'0.1.0'},{instructions:'Deterministic, local Material design assistance. Documentation excerpts require an explicitly refreshed official-source cache. Guidance and reviews are advisory, not accessibility certification. No tool runs a browser, shell, network request, or model.'});
   for(const tool of allTools) {
     server.registerTool(tool.name,{description:tool.description,inputSchema:tool.inputSchema.shape,annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}},async (input: unknown)=>executeTool(tool,input));

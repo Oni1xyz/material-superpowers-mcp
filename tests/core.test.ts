@@ -2,9 +2,9 @@ import { expect, it } from 'vitest';
 import { z } from 'zod';
 import { executeTool, createServer, allTools } from '../src/server.js';
 
-it('registers exactly ten unique tools', () => {
-  expect(allTools).toHaveLength(10);
-  expect(new Set(allTools.map(t => t.name)).size).toBe(10);
+it('registers exactly twelve unique tools', () => {
+  expect(allTools).toHaveLength(12);
+  expect(new Set(allTools.map(t => t.name)).size).toBe(12);
   expect(createServer()).toBeDefined();
 });
 it('validates before running and returns bounded MCP errors', async () => {

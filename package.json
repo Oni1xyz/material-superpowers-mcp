@@ -16,6 +16,7 @@
     "test": "vitest run",
     "smoke": "node scripts/smoke.mjs",
     "refresh-cache": "tsx scripts/refresh-cache.ts",
+    "refresh-resources": "tsx scripts/refresh-resources.ts",
     "evals": "tsx scripts/evals.ts",
     "evals:ui": "tsx evals/run-ui.ts",
     "check:dependencies": "node scripts/check-dependencies.mjs"

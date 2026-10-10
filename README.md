@@ -6,13 +6,15 @@ Private project: https://github.com/Oni1xyz/material-superpowers-mcp
 
 ## What exists
 
-Ten stdio tools:
+Twelve stdio tools:
 
 | Tool | Capability |
 | --- | --- |
 | `material_search_docs` | Search the local official-source cache |
 | `material_read_doc` | Read a cached page or heading with provenance |
 | `material_get_context` | Gather bounded, cited excerpts for a task |
+| `material_coverage_status` | Separate article, numeric-resource, implementation and evaluation coverage |
+| `material_read_spec` | Paginate locally imported numeric token alternatives with exact page selection and provenance |
 | `material_generate_tokens` | Material Color Utilities HCT schemes, light/dark, CSS roles and contrast calculations |
 | `material_map_brand_to_tokens` | Deterministic brand-role mapping with warnings |
 | `material_component_recipe` | Plain HTML/CSS/JS for button, card, navigation, chip, text field, dialog, snackbar and list |
@@ -39,18 +41,23 @@ npm run smoke
 
 The test suite includes real-browser focus regressions. An installed Chrome/Chromium is required; on a clean machine run the explicit browser setup described below before `npm test`. Missing browsers fail rather than silently skipping those tests.
 
-`smoke` uses the real SDK stdio client, discovers and calls all ten tools, and checks invalid inputs. Without a documentation cache, it verifies the explicit missing-cache error rather than pretending to retrieve docs.
+`smoke` uses the real SDK stdio client, discovers and calls all twelve tools, and checks invalid inputs. Without a documentation cache, it verifies the explicit missing-cache error rather than pretending to retrieve docs.
 
 ### Documentation import (explicit network access)
 
 ```sh
 npm run refresh-cache
+npm run refresh-resources
 npm run smoke -- --require-cache
 ```
 
-The importer attempts a rendered `m3.material.io` button article, then imports a small fixed official Material Web Markdown catalog. The M3 SPA import can fail under the restrictive browser network policy; this is reported, not hidden. The currently exercised fallback corpus covers buttons, dialogs, chips, text fields, color and typography. This is NOT a complete index of m3.material.io: foundations, navigation and many other topics are not yet in the cache.
+The importer discovers the current official sitemap, route data and content version, then fetches structured M3 documents. It parses upstream JavaScript as data without executing it. The verified snapshot indexes all 252 core canonical URLs (36 component families, foundations and styles), plus 11 support pages. These are observed snapshot counts, not hardcoded completeness targets. `material_coverage_status` reports the actual ledger, exclusions and outstanding gaps.
 
-Every imported document includes URL, fetch time, SHA-256, source kind and extraction method. The cache is ignored by git. Missing/invalid cache produces an actionable error; failed refresh preserves the previous cache. Do not confuse authored guidance with retrieved official excerpts.
+Documents retain exact section mapping, heading/block structure, both canonical and version-specific source IDs, explicit visibility metadata, citations and digests. Hidden content is excluded; its exclusion ledger contains metadata only. Media references are preserved, not visually interpreted. Numeric resource tables require separate import and verification; canonical URL coverage is not complete specification knowledge or implementation certification.
+
+Immutable per-document snapshots use a bounded index and atomic manifest publication. A failed refresh preserves the previous manifest; unchanged source envelopes can be resumed without downloading them again. Reads support snapshot-bound semantic pagination. Legacy Material Web caches remain separately labeled. Downloaded content is ignored by git, and missing/invalid caches produce actionable errors. See [corpus storage and provenance](src/material/README.md) for limits and verification commands.
+
+Numeric import is separately bounded and currently partial: unsupported module types, schema failures and budget exhaustion are reported per module/endpoint. It never guesses omitted numeric values or picks a context winner. See [resource coverage and limits](docs/research/resource-integration.md). After an article snapshot changes, re-run `npm run refresh-resources`; stale sidecars fail explicitly.
 
 By default the cache lives at `.cache/material` relative to the process working directory. Set `MATERIAL_CACHE_DIR` to an absolute directory when an MCP client launches the server elsewhere.
 
@@ -123,7 +130,9 @@ Without the mount, non-docs tools work and docs tools return the missing-cache e
 
 ## Development
 
-Plan: [implementation and acceptance](docs/plans/implementation.md).
+Latest increment: [knowledge verification and remaining scope](docs/knowledge-verification.md).
+Roadmap: [comprehensive M3 scope](docs/plans/comprehensive-m3-scope.md).
+Original plan: [implementation and acceptance](docs/plans/implementation.md).
 Design behavior: [design evaluation notes](evals/design-evaluation.md).
 Research gate: [controlled A/B benchmark](evals/benchmark.md).
 
