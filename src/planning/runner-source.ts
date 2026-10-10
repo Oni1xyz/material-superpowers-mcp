@@ -2,11 +2,30 @@
 export const runnerSource = String.raw`
 function assert(condition, message) { if (!condition) throw new Error(message); }
 
+// Playwright has no public unrouteWebSocket API. Keep exactly one fail-closed
+// blocker per context, but detach all per-run recording state in finally.
+// The caller owns this dedicated context and must close it after evaluation.
+const socketGuards = new WeakMap();
+
 export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath } = {}) {
   // Metadata URL is deliberately NOT a navigation default. This runner is local-only.
   const destination = new URL(url);
   assert(destination.protocol === 'http:' && destination.hostname === '127.0.0.1' && !destination.username && !destination.password, 'Runner requires an explicit http://127.0.0.1 loopback fixture URL');
+  const context = page.context();
+  assert(typeof context.routeWebSocket === 'function', 'NETWORK-ISOLATION requires Playwright >= 1.48 with BrowserContext.routeWebSocket');
+  let socketGuard = socketGuards.get(context);
+  if (!socketGuard) {
+    socketGuard = { active: null, ready: null };
+    socketGuards.set(context, socketGuard);
+    socketGuard.ready = context.routeWebSocket('**/*', async socket => {
+      if (socketGuard.active) socketGuard.active.push(socket.url());
+      // Never connectToServer: even same-origin sockets are prohibited.
+      await socket.close();
+    });
+  }
+  assert(socketGuard.active === null, 'NETWORK-ISOLATION requires sequential runs in a dedicated context');
   const blockedRequests = [];
+  socketGuard.active = blockedRequests;
   const guard = async route => {
     const request = new URL(route.request().url());
     if (request.origin !== destination.origin) {
@@ -14,7 +33,6 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
       await route.abort('blockedbyclient');
     } else await route.continue();
   };
-  await page.context().route('**/*', guard);
   const results = [];
   const screenshots = [];
   const interactive = 'button:not([disabled]),a[href],input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),[tabindex="0"]';
@@ -178,6 +196,9 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
     },
   };
   try {
+    // Both guards must be ready before the first fixture navigation.
+    await socketGuard.ready;
+    await context.route('**/*', guard);
     for (const viewport of specification.breakpoints) {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       for (const check of specification.checks.filter(c => c.execution === 'runnable')) {
@@ -208,7 +229,8 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
       limitations: specification.limitations,
     };
   } finally {
-    await page.context().unroute('**/*', guard);
+    socketGuard.active = null;
+    await context.unroute('**/*', guard);
   }
 }
 `;

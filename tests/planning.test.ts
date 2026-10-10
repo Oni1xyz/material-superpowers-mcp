@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { planningTools } from '../src/tools/planning.js';
 
 const tool = (name: string) => planningTools.find(t => t.name === name)!;
@@ -47,6 +47,33 @@ describe('deterministic planning tools', () => {
     }
     expect(out.checks.map((c: any) => c.id)).toEqual(expect.arrayContaining(['A11Y-AXE', 'KEYBOARD-FOCUS', 'LAYOUT-OVERFLOW', 'MOTION-REDUCED', 'VISUAL-REVIEW']));
     expect(out.artifact.source).toContain('export async function runGeneratedPlan');
+  });
+  it('documents isolation prerequisites and fails closed without WebSocket routing', async () => {
+    const out = plan(base);
+    expect(out.artifact.instructions).toContain('serviceWorkers: "block"');
+    expect(out.artifact.instructions).toContain('Playwright >= 1.48');
+    expect(out.artifact.instructions).toContain('close the dedicated context');
+    const module = await import(/* @vite-ignore */ 'data:text/javascript;base64,' + Buffer.from(out.artifact.source).toString('base64'));
+    const goto = vi.fn();
+    await expect(module.runGeneratedPlan({ context: () => ({}), goto }, { url: 'http://127.0.0.1:12345' })).rejects.toThrow('NETWORK-ISOLATION requires Playwright');
+    expect(goto).not.toHaveBeenCalled();
+  });
+  it('removes the HTTP route and detaches run state even if guard setup fails', async () => {
+    const out = plan(base);
+    const module = await import(/* @vite-ignore */ 'data:text/javascript;base64,' + Buffer.from(out.artifact.source).toString('base64'));
+    const context = {
+      routeWebSocket: vi.fn().mockResolvedValue(undefined),
+      route: vi.fn().mockRejectedValue(new Error('intentional route setup failure')),
+      unroute: vi.fn().mockResolvedValue(undefined),
+    };
+    const page = { context: () => context, goto: vi.fn() };
+    for (let run = 0; run < 2; run++) {
+      await expect(module.runGeneratedPlan(page, { url: 'http://127.0.0.1:12345' })).rejects.toThrow('intentional route setup failure');
+      expect(context.unroute.mock.calls[run]).toEqual(context.route.mock.calls[run]);
+    }
+    expect(context.routeWebSocket).toHaveBeenCalledTimes(1);
+    expect(context.unroute).toHaveBeenCalledTimes(2);
+    expect(page.goto).not.toHaveBeenCalled();
   });
   it('never turns arbitrary flows into passing smoke tests', () => {
     const out = plan({ ...base, flows: ['Make a payment', 'dialog'] });
