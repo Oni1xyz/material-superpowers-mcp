@@ -1,0 +1,1220 @@
+{
+  "sitemapUrl": "https://m3.material.io/sitemap.xml",
+  "checkedAt": "2026-10-10T00:11:03.802579+00:00",
+  "contentVersion": "2026-09-23_06-10-05",
+  "sitemapUniqueUrls": 375,
+  "coreUrlsIncludingCategoryLandings": 252,
+  "coreByCategory": {
+    "components": 146,
+    "foundations": 68,
+    "styles": 38
+  },
+  "componentFamilies": [
+    "app-bars",
+    "badges",
+    "bottom-sheets",
+    "button-groups",
+    "buttons",
+    "cards",
+    "carousel",
+    "checkbox",
+    "chips",
+    "date-pickers",
+    "dialogs",
+    "divider",
+    "extended-fab",
+    "fab-menu",
+    "floating-action-button",
+    "icon-buttons",
+    "lists",
+    "loading-indicator",
+    "menus",
+    "navigation-bar",
+    "navigation-drawer",
+    "navigation-rail",
+    "progress-indicators",
+    "radio-button",
+    "search",
+    "segmented-buttons",
+    "side-sheets",
+    "sliders",
+    "snackbar",
+    "split-button",
+    "switch",
+    "tabs",
+    "text-fields",
+    "time-pickers",
+    "toolbars",
+    "tooltips"
+  ],
+  "componentFamilyCount": 36,
+  "coreRouteDocuments": 81,
+  "sampledDocumentsSucceeded": 8,
+  "sampledDocuments": [
+    {
+      "path": "components/buttons",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/e31df68a-59d4-41dc-8743-8c48b476d4f8.json",
+      "status": 200,
+      "bytes": 221430,
+      "title": "Buttons",
+      "sections": [
+        "Overview",
+        "Specs",
+        "Guidelines",
+        "Accessibility"
+      ],
+      "blocks": 121,
+      "chunks": 168,
+      "htmlChunks": 93,
+      "images": 69,
+      "resourceNames": [
+        "designSystems/030656e0a1083ef1/components/4c66f2c4b2f2cb18",
+        "designSystems/20543ce18892f7d9/components/1c4257f8804f9478"
+      ]
+    },
+    {
+      "path": "components/date-pickers",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/523144a0-9184-44bd-93f0-5b4c7355f421.json",
+      "status": 200,
+      "bytes": 192405,
+      "title": "Date pickers",
+      "sections": [
+        "Overview",
+        "Specs",
+        "Guidelines",
+        "Accessibility"
+      ],
+      "blocks": 104,
+      "chunks": 135,
+      "htmlChunks": 66,
+      "images": 56,
+      "resourceNames": [
+        "designSystems/030656e0a1083ef1/components/13ab9956d1c04e88",
+        "designSystems/20543ce18892f7d9/components/01c5310367774eb8"
+      ]
+    },
+    {
+      "path": "components/navigation-rail",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/98fe42bd-9bb1-4307-9e92-e61e57c3e9da.json",
+      "status": 200,
+      "bytes": 252946,
+      "title": "Navigation rail",
+      "sections": [
+        "Overview",
+        "Specs",
+        "Guidelines",
+        "XR",
+        "Accessibility"
+      ],
+      "blocks": 126,
+      "chunks": 182,
+      "htmlChunks": 97,
+      "images": 63,
+      "resourceNames": [
+        "designSystems/030656e0a1083ef1/components/6073fa0062bb7074",
+        "designSystems/20543ce18892f7d9/components/5b55bd7cc1ea6e29"
+      ]
+    },
+    {
+      "path": "styles/spacing/tokens",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/36e81931-9b87-406f-9ec5-c0cc049564d8.json",
+      "status": 200,
+      "bytes": 65262,
+      "title": "Spacing",
+      "sections": [
+        "Overview",
+        "Applying spacing",
+        "Tokens"
+      ],
+      "blocks": 33,
+      "chunks": 48,
+      "htmlChunks": 26,
+      "images": 19,
+      "resourceNames": [
+        "designSystems/20543ce18892f7d9"
+      ]
+    },
+    {
+      "path": "styles/motion/overview/specs",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/ccf2c3e9-82b5-4c4a-9570-b0d08d95c0c1.json",
+      "status": 200,
+      "bytes": 63395,
+      "title": "Motion physics system",
+      "sections": [
+        "How it works",
+        "Specs"
+      ],
+      "blocks": 31,
+      "chunks": 44,
+      "htmlChunks": 27,
+      "images": 1,
+      "resourceNames": [
+        "designSystems/20543ce18892f7d9"
+      ]
+    },
+    {
+      "path": "foundations/layout/bidirectionality-rtl",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/35f8449d-9b29-4224-95ac-65a0708c8722.json",
+      "status": 200,
+      "bytes": 63527,
+      "title": "Bidirectionality &amp; RTL",
+      "sections": [
+        "Tab 1"
+      ],
+      "blocks": 26,
+      "chunks": 48,
+      "htmlChunks": 26,
+      "images": 21,
+      "resourceNames": []
+    },
+    {
+      "path": "foundations/xr/design/overview",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/95a7d4f6-3a81-47b3-9e99-083b5daf66be.json",
+      "status": 200,
+      "bytes": 102086,
+      "title": "Design",
+      "sections": [
+        "Overview",
+        "Interaction",
+        "Layout",
+        "Accessibility"
+      ],
+      "blocks": 49,
+      "chunks": 72,
+      "htmlChunks": 43,
+      "images": 11,
+      "resourceNames": []
+    },
+    {
+      "path": "foundations/content-design/alt-text",
+      "url": "https://m3.material.io/_dsm/content/m3/2026-09-23_06-10-05/5a576ba1-d2c8-4708-a167-2a10d0260f72.json",
+      "status": 200,
+      "bytes": 64458,
+      "title": "Alt text",
+      "sections": [
+        "Tab 1"
+      ],
+      "blocks": 20,
+      "chunks": 48,
+      "htmlChunks": 19,
+      "images": 28,
+      "resourceNames": []
+    }
+  ],
+  "urls": [
+    {
+      "url": "https://m3.material.io/components",
+      "lastmod": "2026-09-01"
+    },
+    {
+      "url": "https://m3.material.io/components/all-buttons",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/app-bars/accessibility",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/app-bars/guidelines",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/app-bars/overview",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/app-bars/specs",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/badges/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/badges/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/badges/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/badges/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/bottom-sheets/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/bottom-sheets/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/bottom-sheets/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/bottom-sheets/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/button-groups/accessibility",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/button-groups/guidelines",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/button-groups/overview",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/button-groups/specs",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/buttons/accessibility",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/buttons/guidelines",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/buttons/overview",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/buttons/specs",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/cards/accessibility",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/cards/guidelines",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/cards/overview",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/cards/specs",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/carousel/accessibility",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/components/carousel/guidelines",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/components/carousel/overview",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/components/carousel/specs",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/components/checkbox/accessibility",
+      "lastmod": "2026-08-12"
+    },
+    {
+      "url": "https://m3.material.io/components/checkbox/guidelines",
+      "lastmod": "2026-08-12"
+    },
+    {
+      "url": "https://m3.material.io/components/checkbox/overview",
+      "lastmod": "2026-08-12"
+    },
+    {
+      "url": "https://m3.material.io/components/checkbox/specs",
+      "lastmod": "2026-08-12"
+    },
+    {
+      "url": "https://m3.material.io/components/chips/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/chips/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/chips/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/chips/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/date-pickers/accessibility",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/date-pickers/guidelines",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/date-pickers/overview",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/date-pickers/specs",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/dialogs/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/dialogs/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/dialogs/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/dialogs/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/divider/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/divider/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/divider/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/divider/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/extended-fab/accessibility",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/extended-fab/guidelines",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/extended-fab/overview",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/extended-fab/specs",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/fab-menu/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/fab-menu/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/fab-menu/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/fab-menu/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/floating-action-button/accessibility",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/floating-action-button/guidelines",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/floating-action-button/overview",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/floating-action-button/specs",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/icon-buttons/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/icon-buttons/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/icon-buttons/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/icon-buttons/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/lists/accessibility",
+      "lastmod": "2026-08-06"
+    },
+    {
+      "url": "https://m3.material.io/components/lists/guidelines",
+      "lastmod": "2026-08-06"
+    },
+    {
+      "url": "https://m3.material.io/components/lists/overview",
+      "lastmod": "2026-08-06"
+    },
+    {
+      "url": "https://m3.material.io/components/lists/specs",
+      "lastmod": "2026-08-06"
+    },
+    {
+      "url": "https://m3.material.io/components/loading-indicator/accessibility",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/loading-indicator/guidelines",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/loading-indicator/overview",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/loading-indicator/specs",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/menus/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/menus/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/menus/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/menus/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-bar/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-bar/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-bar/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-bar/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-drawer/accessibility",
+      "lastmod": "2026-07-30"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-drawer/guidelines",
+      "lastmod": "2026-07-30"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-drawer/overview",
+      "lastmod": "2026-07-30"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-drawer/specs",
+      "lastmod": "2026-07-30"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-rail/accessibility",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-rail/guidelines",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-rail/overview",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/navigation-rail/specs",
+      "lastmod": "2026-07-24"
+    },
+    {
+      "url": "https://m3.material.io/components/progress-indicators/accessibility",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/progress-indicators/guidelines",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/progress-indicators/overview",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/progress-indicators/specs",
+      "lastmod": "2026-07-29"
+    },
+    {
+      "url": "https://m3.material.io/components/radio-button/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/radio-button/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/radio-button/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/radio-button/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/search/accessibility",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/search/guidelines",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/search/overview",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/search/specs",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/components/segmented-buttons/accessibility",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/segmented-buttons/guidelines",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/segmented-buttons/overview",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/segmented-buttons/specs",
+      "lastmod": "2026-09-16"
+    },
+    {
+      "url": "https://m3.material.io/components/side-sheets/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/side-sheets/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/side-sheets/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/side-sheets/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/sliders/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/sliders/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/sliders/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/sliders/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/snackbar/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/snackbar/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/snackbar/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/snackbar/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/split-button/accessibility",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/split-button/guidelines",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/split-button/overview",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/split-button/specs",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/switch/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/switch/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/switch/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/switch/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tabs/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tabs/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tabs/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tabs/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/text-fields/accessibility",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/text-fields/guidelines",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/text-fields/overview",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/text-fields/specs",
+      "lastmod": "2026-09-08"
+    },
+    {
+      "url": "https://m3.material.io/components/time-pickers/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/time-pickers/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/time-pickers/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/time-pickers/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/toolbars/accessibility",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/toolbars/guidelines",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/toolbars/overview",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/toolbars/specs",
+      "lastmod": "2026-07-28"
+    },
+    {
+      "url": "https://m3.material.io/components/tooltips/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tooltips/guidelines",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tooltips/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/components/tooltips/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/building-for-all/co-design",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/building-for-all/user-needs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/alt-text",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/global-writing/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/global-writing/word-choice",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/notifications",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/style-guide/grammar-and-punctuation",
+      "lastmod": "2026-08-04"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/style-guide/ux-writing-best-practices",
+      "lastmod": "2026-08-04"
+    },
+    {
+      "url": "https://m3.material.io/foundations/content-design/style-guide/word-choice",
+      "lastmod": "2026-08-04"
+    },
+    {
+      "url": "https://m3.material.io/foundations/customization",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/design-tokens/how-to-use-tokens",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/design-tokens/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/designing/color-contrast",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/designing/elements",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/designing/flow",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/designing/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/designing/structure",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/glossary",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/foundations/interaction/gestures",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/interaction/inputs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/interaction/selection",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/interaction/states/applying-states",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/interaction/states/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/interaction/states/state-layers",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/bidirectionality-rtl",
+      "lastmod": "2026-08-05"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/breakpoints/compact",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/breakpoints/expanded",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/breakpoints/large-extra-large",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/breakpoints/medium",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/breakpoints/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/canonical-examples/feed",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/canonical-examples/list-detail",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/canonical-examples/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/canonical-examples/supporting-pane",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/grids-spacing/density",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/grids-spacing/grids",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/grids-spacing/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/grids-spacing/spacing",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/layout-overview/adaptive-design",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/layout-overview/overview",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/layout-overview/parts-of-layout",
+      "lastmod": "2026-08-18"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/scaffold/bars",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/scaffold/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/scaffold/panes",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/layout/scaffold/rails",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/overview/assistive-technology",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/overview/principles",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/usability/applying-m3-expressive",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/usability/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/watches/foundations",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/watches/layout",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/watches/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/watches/styles",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/writing/best-practices",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/writing/text-resizing",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/writing/text-truncation",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/components/app-bars",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/components/dialogs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/components/nav-bar",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/components/nav-rail",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/components/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/components/toolbars",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/design/accessibility",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/design/interaction",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/design/layout",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/foundations/xr/design/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/advanced/adjust-existing-colors",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/advanced/apply-colors",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/advanced/define-new-colors",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/advanced/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/choosing-a-scheme",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/dynamic/choosing-a-source",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/dynamic/content-based-source",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/dynamic/user-generated-source",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/resources",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/roles",
+      "lastmod": "2026-07-27"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/static/baseline",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/static/custom-brand",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/system/how-the-system-works",
+      "lastmod": "2026-07-23"
+    },
+    {
+      "url": "https://m3.material.io/styles/color/system/overview",
+      "lastmod": "2026-07-23"
+    },
+    {
+      "url": "https://m3.material.io/styles/elevation/applying-elevation",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/elevation/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/elevation/tokens",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/icons/applying-icons",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/icons/designing-icons",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/icons/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/motion/easing-and-duration/applying-easing-and-duration",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/motion/easing-and-duration/tokens-specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/motion/overview/how-it-works",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/motion/overview/specs",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/motion/transitions/applying-transitions",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/motion/transitions/transition-patterns",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/shape/corner-radius-scale",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/shape/overview-principles",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/shape/shape-morph",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/spacing/applying-spacing",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/spacing/overview",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/spacing/tokens",
+      "lastmod": "2026-07-17"
+    },
+    {
+      "url": "https://m3.material.io/styles/typography/applying-type",
+      "lastmod": "2026-08-28"
+    },
+    {
+      "url": "https://m3.material.io/styles/typography/editorial-treatments",
+      "lastmod": "2026-08-28"
+    },
+    {
+      "url": "https://m3.material.io/styles/typography/fonts",
+      "lastmod": "2026-08-28"
+    },
+    {
+      "url": "https://m3.material.io/styles/typography/overview",
+      "lastmod": "2026-08-28"
+    },
+    {
+      "url": "https://m3.material.io/styles/typography/type-scale-tokens",
+      "lastmod": "2026-08-28"
+    }
+  ],
+  "limitations": [
+    "Inventory is sitemap/route coverage, not proof every content block was imported.",
+    "Eight sample document payloads fetched successfully; full corpus not fetched.",
+    "Token resource URLs derived by the community-client approach returned 404 in two version probes. Resolve rendering/resource endpoint before promising numeric specification completeness.",
+    "No production server or cache changes made for this scope exercise."
+  ]
+}

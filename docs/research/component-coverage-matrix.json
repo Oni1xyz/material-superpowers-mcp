@@ -1,0 +1,686 @@
+[
+  {
+    "family": "app-bars",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "badges",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "bottom-sheets",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "button-groups",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "buttons",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "cards",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "carousel",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "checkbox",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "chips",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "date-pickers",
+    "currentRecipe": "missing",
+    "costTier": "complex",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "dialogs",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "divider",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "extended-fab",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "fab-menu",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "floating-action-button",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "icon-buttons",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "lists",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "loading-indicator",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "menus",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "navigation-bar",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "navigation-drawer",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "navigation-rail",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": "Current navigation-rail is generic navigation alias, not a full Material rail."
+  },
+  {
+    "family": "progress-indicators",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "radio-button",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "search",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "segmented-buttons",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "side-sheets",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "sliders",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "snackbar",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "split-button",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "switch",
+    "currentRecipe": "missing",
+    "costTier": "simple-to-moderate",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "tabs",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "text-fields",
+    "currentRecipe": "partial-example",
+    "costTier": "existing-needs-hardening",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "time-pickers",
+    "currentRecipe": "missing",
+    "costTier": "complex",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "toolbars",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  },
+  {
+    "family": "tooltips",
+    "currentRecipe": "missing",
+    "costTier": "composite",
+    "officialSections": [
+      "overview",
+      "specs",
+      "guidelines",
+      "accessibility"
+    ],
+    "doneCriteria": [
+      "official section provenance",
+      "variant/state coverage",
+      "multi-instance safety",
+      "theme/RTL/keyboard tests",
+      "independent browser acceptance"
+    ],
+    "notes": ""
+  }
+]
