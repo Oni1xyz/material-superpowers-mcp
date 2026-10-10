@@ -1,4 +1,4 @@
-import { M3_ORIGIN, discoverMainScript, discoverBundle, parseSitemap, mapCanonicalRoutes, validateM3Url } from '../src/material/discovery.js';
+import { M3_ORIGIN, discoverMainScript, discoverBundle, parseSitemap, mapCanonicalRoutes, exactM3Endpoint } from '../src/material/discovery.js';
 import { sha256 } from '../src/material/cache.js';
 import { renderedSource, validateSourceUrl, type DocSource } from '../src/material/sources.js';
 /** Only hashed Angular application assets on the exact official host are eligible.
@@ -17,6 +17,7 @@ export async function boundedFetch(url:string,options:FetchOptions={}) {
   let current=validate(url);
   for(let redirect=0;redirect<=3;redirect++) {
     const response=await fetcher(current,{redirect:'manual',signal,headers:{'User-Agent':'Material-Superpowers-Explicit-Docs-Refresh/0.1','Accept':'application/json,application/xml,text/plain,text/html,application/javascript,text/css'}});
+    if(response.url && response.url!==current) {await response.body?.cancel();throw new Error('Official response URL mismatch');}
     if([301,302,303,307,308].includes(response.status)) {
       const location=response.headers.get('location');await response.body?.cancel();
       if(!location)throw new Error('Redirect without location');
@@ -35,13 +36,16 @@ export async function boundedFetch(url:string,options:FetchOptions={}) {
   }
   throw new Error('Too many official-source redirects');
 }
+export function fetchM3Endpoint(url:string, options:Omit<FetchOptions,'validate'>={}) {
+  return boundedFetch(url,{...options,validate:exactM3Endpoint(url)});
+}
 export async function discoverOfficialM3() {
   const [home,sitemap]=await Promise.all([
-    boundedFetch(M3_ORIGIN+'/',{validate:validateM3Url,maxBytes:2_000_000}),
-    boundedFetch(M3_ORIGIN+'/sitemap.xml',{validate:validateM3Url,maxBytes:2_000_000}),
+    fetchM3Endpoint(M3_ORIGIN+'/',{maxBytes:2_000_000}),
+    fetchM3Endpoint(M3_ORIGIN+'/sitemap.xml',{maxBytes:2_000_000}),
   ]);
   const bundleUrl=discoverMainScript(home.text);
-  const bundle=await boundedFetch(bundleUrl,{validate:validateM3Url,maxBytes:16_000_000,timeoutMs:30000});
+  const bundle=await fetchM3Endpoint(bundleUrl,{maxBytes:16_000_000,timeoutMs:30000});
   const discovered=discoverBundle(bundle.text),entries=parseSitemap(sitemap.text);
   return {...discovered,entries,mappings:mapCanonicalRoutes(entries,discovered.routes),bundleUrl,bundleSha256:sha256(bundle.text),sitemapSha256:sha256(sitemap.text),discoveredAt:new Date().toISOString()};
 }

@@ -2,9 +2,10 @@
   "name": "material-superpowers-mcp",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=20.19.0"
+    "node": "^24.21.0"
   },
   "bin": {
     "material-superpowers-mcp": "dist/index.js"

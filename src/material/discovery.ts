@@ -22,8 +22,9 @@ export interface RouteMapping extends SitemapEntry {
     section?: string;
     reason?: string;
 }
-/** Validate the raw spelling before WHATWG URL normalization. No credentials,
- * encodings, ports, query, fragment, backslash, dot segments, or foreign host. */
+/** Citation/discovery validation, NOT a transport allowlist: canonical article
+ * paths may be cited but must never authorize arbitrary network requests.
+ * Validate raw spelling before any WHATWG URL normalization. */
 export function validateM3Url(value: string): string {
     if (value.length > 600 || /[\s\\%?#@]/.test(value) || !value.startsWith(M3_ORIGIN + '/'))
         throw new Error('URL outside official M3 allowlist');
@@ -35,6 +36,27 @@ export function validateM3Url(value: string): string {
     throw new Error('URL outside official M3 allowlist');
 }
 export function contentUrl(version: string, id: string) { return validateM3Url(`${M3_ORIGIN}/_dsm/content/m3/${carbonVersionSchema.parse(version)}/${carbonIdSchema.parse(id)}`); }
+/** Pin each transport to its planned identity: the homepage, sitemap, main
+ * bundle discovered from that homepage, or current discovered UUID content URL.
+ * Even another valid endpoint cannot be substituted by a redirect. Callers
+ * supply the discovered bundle/version/ID, never an arbitrary citation URL. */
+export function exactM3Endpoint(expected: string): (value: string) => string {
+    validateM3Url(expected);
+    const path = expected.slice(M3_ORIGIN.length);
+    const content = /^\/_dsm\/content\/m3\/(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})\/([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}\.json)$/.exec(path);
+    if (!(path === '/' || path === '/sitemap.xml' || /^\/static\/angular\/main\.[a-f0-9]{16,64}\.js$/.test(path) || content))
+        throw new Error('URL outside official M3 endpoint allowlist');
+    if (content) {
+        const iso = content[1].replace('_', 'T').replace(/T(\d{2})-(\d{2})-(\d{2})$/, 'T$1:$2:$3') + 'Z';
+        const date = new Date(iso);
+        if (!Number.isFinite(date.getTime()) || date.toISOString().replace('.000', '') !== iso) throw new Error('Invalid endpoint carbon version');
+    }
+    return value => {
+        validateM3Url(value);
+        if (value !== expected) throw new Error('Redirect outside planned M3 endpoint allowlist');
+        return value;
+    };
+}
 export function discoverMainScript(html: string): string {
     if (html.length > 2000000)
         throw new Error('Homepage exceeds discovery limit');

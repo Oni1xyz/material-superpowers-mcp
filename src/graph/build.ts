@@ -1,5 +1,6 @@
 import { lstat, mkdir, rename, rm, writeFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
+import { cacheRoot, checkCacheTarget, ensureCacheDirectory } from '../material/files.js';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { defaultCacheDir, sha256 } from '../material/cache.js';
@@ -10,10 +11,10 @@ import { authoredRoutes } from './routes.js';
 import { confinedPath, readGraphFile, sourceBinding, validateGraph } from './store.js';
 import { GRAPH_LIMITS, docId, graphIndexSchema, idSchema, nodeSchema, parseGraph, renderMarkdown, resourceId, serializeGraphIndex, type GraphEdge, type GraphIndex, type GraphNode } from './schema.js';
 const routeSchema=z.object({id:z.string().max(300).regex(/^tasks\/[a-z0-9]+(?:-[a-z0-9]+)*$/),title:z.string().max(500),summary:z.string().max(1200),terms:boundedArray(z.string().max(100),100),targets:boundedArray(z.object({path:pathSchema,relation:z.enum(['guidance','alternative','check']),reason:z.string().max(1200)}).strict(),100)}).strict();
-async function safeMkdir(root:string,relative:string){let prefix='';for(const part of relative.split('/')){prefix=prefix?prefix+'/'+part:part;try{await mkdir(join(root,prefix));}catch(e){if((e as NodeJS.ErrnoException).code!=='EEXIST')throw e;}await confinedPath(root,prefix);}}
+
 /** Explicit offline builder only. Not imported by runtime tools. */
 export async function buildKnowledge({dir=defaultCacheDir()}: {dir?:string}={}){
- dir=resolve(dir);const start=await sourceBinding(dir),{corpus,resources}=start;
+ dir=await cacheRoot(dir);const start=await sourceBinding(dir),{corpus,resources}=start;
  const routes=parseGraph(boundedArray(routeSchema,200),authoredRoutes),nodes=new Map<string,GraphNode>(),edgeKeys=new Set<string>();let edgeCount=0,inputBytes=0;
  function add(id:string,kind:GraphNode['kind'],title:string,summary:string,terms:string[]=[]){idSchema.parse(id);if(nodes.has(id))return nodes.get(id)!;if(nodes.size>=GRAPH_LIMITS.nodes)throw new Error('Graph node limit');const node:GraphNode={id,kind,title,summary,terms:[...new Set([...searchTerms(id+' '+title),...terms])].slice(0,150),citations:[],actions:{},outgoing:[],backlinks:[],external:[],markdownSha256:'0'.repeat(64)};nodes.set(id,node);return node;}
  function edge(from:string,to:string,relation:GraphEdge['relation'],origin:GraphEdge['origin'],reason:string,extra:Partial<Pick<GraphEdge,'sourceUrl'|'sourcePointer'>>={}){
@@ -62,7 +63,9 @@ export async function buildKnowledge({dir=defaultCacheDir()}: {dir?:string}={}){
  for(const n of sorted){const order=(a:GraphEdge,b:GraphEdge)=>a.id.localeCompare(b.id)||a.relation.localeCompare(b.relation)||a.origin.localeCompare(b.origin);n.outgoing.sort(order);n.backlinks.sort(order);n.external.sort((a,b)=>a.url.localeCompare(b.url));n.terms.sort();const text=renderMarkdown(n),bytes=Buffer.byteLength(text);if(bytes>GRAPH_LIMITS.noteBytes||notesBytes+bytes>GRAPH_LIMITS.totalBytes)throw new Error('Graph Markdown byte limit');notesBytes+=bytes;n.markdownSha256=sha256(text);}
  const index:GraphIndex=parseGraph(graphIndexSchema,{version:1,corpusSnapshot:corpus.snapshot,resourceSnapshot:start.resourceSnapshot,resourceStatus:start.resourceStatus,routesSha256:sha256(JSON.stringify(routes)),nodes:sorted,counts:{nodes:sorted.length,edges:edgeCount,documents:corpus.index.documents.length,resources:observedModules.size,tasks:routes.length,notesBytes}});validateGraph(index);
  const indexText=serializeGraphIndex(index);if(Buffer.byteLength(indexText)>GRAPH_LIMITS.indexBytes||Buffer.byteLength(indexText)+notesBytes>GRAPH_LIMITS.totalBytes)throw new Error('Graph index/total byte limit');const snapshot=sha256(indexText);
- await safeMkdir(dir,'knowledge/snapshots');const stageRelative=`knowledge/snapshots/.staging-${randomUUID()}`,stage=join(dir,stageRelative),temp=join(dir,`knowledge/.manifest-${randomUUID()}.tmp`),target=join(dir,'knowledge/snapshots',snapshot);
+ await ensureCacheDirectory(dir,'knowledge/snapshots');
+ await checkCacheTarget(dir,`knowledge/snapshots/${snapshot}`,'directory');await checkCacheTarget(dir,'knowledge/manifest.json','file');
+ const stageRelative=`knowledge/snapshots/.staging-${randomUUID()}`,stage=join(dir,stageRelative),temp=join(dir,`knowledge/.manifest-${randomUUID()}.tmp`),target=join(dir,'knowledge/snapshots',snapshot);
  await mkdir(stage);
  try{
  await mkdir(join(stage,'vault'));for(const n of index.nodes){const file=join(stage,'vault',n.id);await mkdir(dirname(file),{recursive:true});await writeFile(file,renderMarkdown(n),{flag:'wx',mode:0o600});}

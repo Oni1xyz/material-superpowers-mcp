@@ -1,19 +1,11 @@
-import { constants } from 'node:fs';
-import { lstat, open, realpath } from 'node:fs/promises';
-import { join, resolve, sep } from 'node:path';
+import { join, resolve } from 'node:path';
+import { confinedPath, readCacheFile } from '../material/files.js';
+export { confinedPath } from '../material/files.js';
 import { defaultCacheDir, sha256 } from '../material/cache.js';
 import { openCorpus } from '../material/corpus.js';
 import { readResourceCoverage } from '../material/resource-store.js';
 import { GRAPH_HELP, GRAPH_LIMITS, graphIndexSchema, graphManifestSchema, idSchema, parseGraph, renderMarkdown, type GraphIndex } from './schema.js';
-export async function confinedPath(root:string,relative:string){
- if(!relative||relative.length>1000||relative.startsWith('/')||relative.includes('\\')||relative.split('/').some(p=>!p||p==='.'||p==='..'))throw new Error('Graph path confinement violation');
- const base=await realpath(root);let current=base;for(const part of relative.split('/')){current=join(current,part);const st=await lstat(current);if(st.isSymbolicLink())throw new Error('Graph symlink confinement violation');}
- if(!(await realpath(current)).startsWith(base+sep))throw new Error('Graph path confinement violation');return current;
-}
-export async function readGraphFile(root:string,relative:string,max:number){
- const path=await confinedPath(root,relative),handle=await open(path,constants.O_RDONLY|constants.O_NOFOLLOW);
- try{const st=await handle.stat();if(!st.isFile()||st.size>max)throw new Error('Graph file size limit');const buffer=Buffer.alloc(st.size+1);let used=0;while(used<buffer.length){const n=await handle.read(buffer,used,buffer.length-used,null);if(!n.bytesRead)break;used+=n.bytesRead;}if(used!==st.size)throw new Error('Graph changed during read');return buffer.subarray(0,used).toString('utf8');}finally{await handle.close();}
-}
+export const readGraphFile = readCacheFile;
 export async function sourceBinding(dir=defaultCacheDir()){
  const corpus=await openCorpus(dir);
  await confinedPath(dir,'manifest.json');await confinedPath(dir,`snapshots/${corpus.snapshot}/index.json`);

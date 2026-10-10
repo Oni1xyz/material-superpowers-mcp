@@ -2,7 +2,7 @@
 
 A local, unofficial Material 3 toolkit for coding agents. Generate brand-adapted tokens and component recipes, retrieve cached official documentation, review source, and emit an executable UI evaluation plan. Browser tests run separately—not inside MCP tool calls.
 
-Private project: https://github.com/Oni1xyz/material-superpowers-mcp
+Repository: https://github.com/Oni1xyz/material-superpowers-mcp
 
 ## What exists
 
@@ -28,7 +28,7 @@ These are deterministic tools, not a second hidden LLM. The calling agent interp
 
 ## Install and verify
 
-Node >=20.19 is required. Tested with Node 20.20.1. Use the exact lockfile; install lifecycle scripts remain disabled.
+Use supported Node 24 LTS (24.21.0 or a newer 24.x patch), or the pinned Docker image. Use the exact lockfile; install lifecycle scripts remain disabled.
 
 ```sh
 npm ci --ignore-scripts --engine-strict
@@ -122,14 +122,21 @@ Outputs under ignored `artifacts/ui/` include screenshots, served HTML, plan/mod
 ## Docker runtime
 
 ```sh
+git clone https://github.com/Oni1xyz/material-superpowers-mcp.git
+cd material-superpowers-mcp
 docker build -t material-superpowers-mcp:local .
-npm run smoke -- --docker
+docker run --rm -i --network none --read-only --cap-drop ALL \
+  --security-opt no-new-privileges --pids-limit 128 --memory 512m --cpus 1 \
+  material-superpowers-mcp:local
 ```
 
-Runtime is non-root and can operate without network. To use imported docs:
+This starts a non-root **stdio MCP process**, not a web server; an MCP client launches it and communicates through stdin/stdout. There is no published npm package or prebuilt registry image. `npm run smoke -- --docker` is available when the local Node development dependencies are installed.
+
+For the documentation, numeric-spec and wikilink tools, first prepare a cache with Node 24: `npm ci --ignore-scripts --engine-strict`, `npm run refresh-cache`, optionally `npm run refresh-resources`, and `npm run build-knowledge`. Imports use network explicitly; graph generation is offline. Then mount the cache read-only:
 
 ```sh
-docker run --rm -i --network none \
+docker run --rm -i --network none --read-only --cap-drop ALL \
+  --security-opt no-new-privileges --pids-limit 128 --memory 512m --cpus 1 \
   -v "$PWD/.cache/material:/app/.cache/material:ro" \
   material-superpowers-mcp:local
 ```
@@ -154,5 +161,7 @@ Roadmap: [comprehensive M3 scope](docs/plans/comprehensive-m3-scope.md).
 Original plan: [implementation and acceptance](docs/plans/implementation.md).
 Design behavior: [design evaluation notes](evals/design-evaluation.md).
 Research gate: [controlled A/B benchmark](evals/benchmark.md).
+
+Original project code is [MIT licensed](LICENSE). Security boundaries and private reporting are documented in [SECURITY.md](SECURITY.md). `private:true` prevents accidental npm publication; it does not restrict cloning or using this repository.
 
 Official documentation and Material names/assets remain subject to their owners' licenses. Imported Material Web docs identify Apache-2.0 provenance; M3 site content must be checked against applicable terms before redistribution. This project is not endorsed by Google.

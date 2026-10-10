@@ -1,19 +1,21 @@
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { cacheRoot, checkCacheTarget, ensureCacheDirectory } from '../src/material/files.js';
 import { defaultCacheDir, sha256 } from '../src/material/cache.js';
 import { boundedLocalRead, computeCoverage, publishCorpus, type CorpusDocument } from '../src/material/corpus.js';
 import { parseCarbonDocument } from '../src/material/carbon.js';
-import { categoryFor, contentUrl, tabSlug, validateM3Url } from '../src/material/discovery.js';
-import { boundedFetch, discoverOfficialM3 } from './import-official.js';
+import { categoryFor, contentUrl, tabSlug } from '../src/material/discovery.js';
+import { fetchM3Endpoint, discoverOfficialM3 } from './import-official.js';
 /** Only this explicit CLI performs network and disk writes. MCP handlers only
  * read immutable published snapshots; resource references stay unresolved. */
 async function refresh() {
-    const dir = defaultCacheDir(), discovery = await discoverOfficialM3();
+    const dir = await cacheRoot(defaultCacheDir(), true), discovery = await discoverOfficialM3();
     const { carbonVersion, bundleSha256, mappings } = discovery;
-    const resumeRelative = `imports/${carbonVersion}/${bundleSha256}`, resumeDir = join(dir, resumeRelative);
-    await mkdir(resumeDir, { recursive: true });
+    const resumeRelative = `imports/${carbonVersion}/${bundleSha256}`, resumeDir = await ensureCacheDirectory(dir, resumeRelative);
     const ids = [...new Set(mappings.filter(m => m.status === 'mapped').map(m => m.documentId!))].sort();
+    // Reject any invalid resume target before workers download or write files.
+    for (const id of ids) await checkCacheTarget(dir, `${resumeRelative}/${id}`, 'file');
     const payloads = new Map<string, {
         text: string;
         sourceSha256: string;
@@ -39,10 +41,10 @@ async function refresh() {
                 }
                 catch { /* absent or corrupt resumable payload is fetched again */ }
             if (!payload) {
-                let result: Awaited<ReturnType<typeof boundedFetch>> | undefined;
+                let result: Awaited<ReturnType<typeof fetchM3Endpoint>> | undefined;
                 for (let attempt = 0; attempt < 3; attempt++)
                     try {
-                        result = await boundedFetch(contentUrl(carbonVersion, id), { validate: validateM3Url, maxBytes: 8000000, timeoutMs: 30000 });
+                        result = await fetchM3Endpoint(contentUrl(carbonVersion, id), { maxBytes: 8000000, timeoutMs: 30000 });
                         break;
                     }
                     catch (error) {
@@ -57,6 +59,8 @@ async function refresh() {
                 JSON.parse(result.text);
                 payload = { text: result.text, sourceSha256: sha256(result.text), fetchedAt: new Date().toISOString() };
                 downloaded++;
+                await ensureCacheDirectory(dir, resumeRelative);
+                await checkCacheTarget(dir, `${resumeRelative}/${id}`, 'file');
                 const temporary = join(resumeDir, `.${randomUUID()}.tmp`);
                 try {
                     await writeFile(temporary, JSON.stringify({ ...payload, carbonVersion, bundleSha256, documentId: id }), { flag: 'wx', mode: 0o600 });

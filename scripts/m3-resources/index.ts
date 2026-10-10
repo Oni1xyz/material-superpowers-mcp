@@ -186,12 +186,14 @@ export class FetchFailure extends Error {
 }
 /** Only the public homepage, hashed main bundle, UUID articles, and verified resource endpoints. No arbitrary URL fetch. */
 export function assertOfficialUrl(url: string): void {
+  // URL.search/hash erase empty '?'/'#'; reject their raw spelling first.
+  if (url.length > 600 || /[\s\\%?#@]/.test(url)) throw new FetchFailure('url-rejected', 'Not an approved official endpoint');
   const u = new URL(url);
   const path = u.pathname;
   const version = '\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}';
   const article = new RegExp(`^/_dsm/content/m3/${version}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.json$`);
   const resource = new RegExp(`^/_dsm/data/dsdb-m3/${version}/(?:TOKEN_TABLE|MEASUREMENT|TOKEN_TYPE_UNSPECIFIED)\\.${ID}\\.json$`);
-  if (u.origin !== ORIGIN || u.username || u.password || u.search || u.hash || url !== u.href || !(path === '/' || /^\/static\/angular\/main\.[a-f0-9]+\.js$/.test(path) || article.test(path) || resource.test(path))) throw new FetchFailure('url-rejected', 'Not an approved official endpoint');
+  if (u.origin !== ORIGIN || u.username || u.password || u.search || u.hash || url !== u.href || !(path === '/' || /^\/static\/angular\/main\.[a-f0-9]{16,64}\.js$/.test(path) || article.test(path) || resource.test(path))) throw new FetchFailure('url-rejected', 'Not an approved official endpoint');
   const dated = path.match(/\/(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})\//);
   if (dated) validateVersion(dated[1]);
 }

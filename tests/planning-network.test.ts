@@ -22,6 +22,9 @@ async function installedBrowser() {
 const sockets = new Set<Duplex>();
 let connections = 0;
 let peerRequests = 0;
+let redirectRequests = 0;
+let redirectTargetRequests = 0;
+let normalFetchRequests = 0;
 function acceptWebSockets(server: Server) {
   server.on('upgrade', (request, socket) => {
     connections++;
@@ -45,7 +48,33 @@ const server = createServer((request, response) => {
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
   response.setHeader('Cache-Control', 'no-store');
   // Intentionally no CSP or other harness guard: the emitted runner must isolate.
-  response.end(fixture(request.url === '/blocked'));
+  const url = new URL(request.url!, origin);
+  if (url.pathname === '/redirect') {
+    redirectRequests++;
+    response.writeHead(Number(url.searchParams.get('status') ?? 302), {
+      Location: (url.searchParams.get('peer') === 'true' ? peerOrigin : origin) + '/redirect-target?token=redirect-secret',
+    }).end();
+    return;
+  }
+  if (url.pathname === '/redirect-target') redirectTargetRequests++;
+  if (url.pathname === '/normal-fetch') {
+    normalFetchRequests++;
+    response.end('fixture fetch works');
+    return;
+  }
+  let script = '';
+  if (url.pathname === '/fetch-redirect') {
+    script = `fetch('/redirect?peer=${url.searchParams.get('peer')}&status=${url.searchParams.get('status') ?? 302}').catch(() => {});`;
+  } else if (url.pathname === '/fetch-normal') {
+    script = `fetch('/normal-fetch').then(r => r.text()).then(text => document.querySelector('h1').textContent = text);`;
+  } else if (url.pathname === '/flood') {
+    script = `for (let i = 0; i < 35; i++) {
+      fetch(${JSON.stringify(peerOrigin)} + '/' + 'x'.repeat(1000) + '?token=http-secret-' + i).catch(() => {});
+      const socket = new WebSocket(${JSON.stringify(peerOrigin.replace('http:', 'ws:'))} + '/' + 'y'.repeat(1000) + '?token=socket-secret-' + i);
+      socket.onerror = () => {};
+    }`;
+  }
+  response.end(fixture(url.pathname === '/blocked').replace('</body>', `<script>${script}</script></body>`));
 });
 const peer = createServer((_request, response) => {
   peerRequests++;
@@ -86,6 +115,60 @@ afterAll(async () => {
 });
 
 describe('standalone emitted runner network boundary', () => {
+  it.each([
+    ['navigation', false], ['navigation', true], ['subresource', false], ['subresource', true],
+  ] as const)('rejects %s redirects before a hop (off-origin: %s)', async (kind, offOrigin) => {
+    redirectRequests = redirectTargetRequests = peerRequests = 0;
+    const context = await browser!.newContext({ serviceWorkers: 'block' });
+    try {
+      const page = await context.newPage();
+      const path = kind === 'navigation' ? '/redirect' : '/fetch-redirect';
+      const report = await generated.runGeneratedPlan(page, { url: `${origin}${path}?peer=${offOrigin}&token=navigation-secret`, AxeBuilder });
+      expect(redirectRequests).toBe(runnableCount);
+      // Assert the network effect, not just a post-navigation origin assertion.
+      expect(redirectTargetRequests).toBe(0);
+      expect(peerRequests).toBe(0);
+      expect(report.status).toBe('failed');
+      const isolation = report.results.find((r: any) => r.id === 'NETWORK-ISOLATION');
+      expect(isolation).toMatchObject({
+        status: 'failed', blockedRequestCount: runnableCount, omittedBlockedRequestCount: 0,
+        blockedRequests: Array(runnableCount).fill(origin + '/redirect'),
+      });
+      if (kind === 'subresource') expect(report.results.filter((r: any) => r.id !== 'NETWORK-ISOLATION').every((r: any) => r.status === 'passed')).toBe(true);
+      expect(JSON.stringify(report)).not.toMatch(/redirect-secret|navigation-secret|fragment-secret/);
+    } finally { await context.close(); }
+  }, 30_000);
+
+  it('preserves ordinary fixture fetches without harness guards', async () => {
+    normalFetchRequests = 0;
+    const context = await browser!.newContext({ serviceWorkers: 'block' });
+    try {
+      const page = await context.newPage();
+      const report = await generated.runGeneratedPlan(page, { url: origin + '/fetch-normal', AxeBuilder });
+      expect(report.status).toBe('automated-checks-passed-manual-outstanding');
+      expect(normalFetchRequests).toBe(runnableCount);
+      expect(await page.locator('h1').textContent()).toBe('fixture fetch works');
+    } finally { await context.close(); }
+  }, 30_000);
+
+  it('caps shared HTTP/socket evidence and counts omitted attempts without query secrets', async () => {
+    peerRequests = connections = 0;
+    const context = await browser!.newContext({ serviceWorkers: 'block' });
+    try {
+      const page = await context.newPage();
+      const report = await generated.runGeneratedPlan(page, { url: origin + '/flood', AxeBuilder });
+      const isolation = report.results.find((r: any) => r.id === 'NETWORK-ISOLATION');
+      expect(isolation?.blockedRequests).toHaveLength(100);
+      expect(isolation).toMatchObject({ blockedRequestCount: 70 * runnableCount, omittedBlockedRequestCount: 70 * runnableCount - 100 });
+      expect(isolation.blockedRequests.every((url: string) => url.length <= 256 && !/[?#]/.test(url))).toBe(true);
+      expect(isolation.blockedRequests.some((url: string) => url.startsWith('http:'))).toBe(true);
+      expect(isolation.blockedRequests.some((url: string) => url.startsWith('ws:'))).toBe(true);
+      expect(JSON.stringify(report)).not.toMatch(/http-secret|socket-secret/);
+      expect(peerRequests).toBe(0);
+      expect(connections).toBe(0);
+    } finally { await context.close(); }
+  }, 30_000);
+
   it('blocks sockets itself, records failures, and reuses one blocker without leaking run state', async () => {
     // Neither this test nor a shared harness installs route/routeWebSocket/CSP guards.
     const control = await browser!.newContext({ serviceWorkers: 'block' });

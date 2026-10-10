@@ -19,7 +19,7 @@ const inputs={
 };
 const client=new Client({name:'material-smoke',version:'0.1.0'});
 const docker=process.argv.includes('--docker');
-const transport=new StdioClientTransport({command:docker?'docker':process.execPath,args:docker?['run','--rm','-i','--network','none',...(process.argv.includes('--with-cache')?['-v',`${resolve(process.env.MATERIAL_CACHE_DIR??'.cache/material')}:/app/.cache/material:ro`]:[]),'material-superpowers-mcp:local']:['dist/index.js'],stderr:'pipe',env:{...process.env}});
+const transport=new StdioClientTransport({command:docker?'docker':process.execPath,args:docker?['run','--rm','-i','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--pids-limit','128','--memory','512m','--cpus','1',...(process.argv.includes('--with-cache')?['-v',`${resolve(process.env.MATERIAL_CACHE_DIR??'.cache/material')}:/app/.cache/material:ro`]:[]),'material-superpowers-mcp:local']:['dist/index.js'],stderr:'pipe',env:{...process.env}});
 const protocolErrors=[];let stderr='';
 transport.stderr?.on('data',chunk=>{stderr+=chunk.toString();});
 client.onerror=error=>protocolErrors.push(String(error));

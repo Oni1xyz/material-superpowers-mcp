@@ -1,9 +1,10 @@
-import { mkdir, realpath, rename, rm, writeFile } from 'node:fs/promises';
-import { join, resolve, sep } from 'node:path';
+import { rename, rm, writeFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { defaultCacheDir, sha256 } from '../src/material/cache.js';
+import { checkCacheTarget, ensureCacheDirectory } from '../src/material/files.js';
 import { boundedLocalRead, openCorpus, readCorpusDocument, type Corpus } from '../src/material/corpus.js';
 import { chunkSchema, configurationSchema, loadResourceIndex, moduleSchema, resourceCounts, resourceIndexSchema, resourceManifestSchema, RESOURCE_STORE_LIMITS, type ChunkReference, type ResourceEndpoint, type ResourceIndex, type ResourceModule } from '../src/material/resource-store.js';
 import { assertOfficialUrl, fetchOfficial, FetchFailure, LIMITS, normalizeResource, type ModuleType, type TokenRow } from './m3-resources/index.js';
@@ -40,6 +41,7 @@ export async function inventoryResourceModules(corpus: Corpus): Promise<Resource
 }
 async function immutableFile(corpus: Corpus, relative: string, body: string | Buffer, max: number) {
   if (Buffer.byteLength(body) > max) throw new Error('Resource artifact size limit');
+  await checkCacheTarget(corpus.dir, relative, 'file');
   try { await writeFile(join(corpus.dir, relative), body, { flag: 'wx', mode: 0o600 }); }
   catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
@@ -104,11 +106,14 @@ export async function refreshResources(options: RefreshResourceOptions = {}) {
     try { const old = await loadResourceIndex(corpus, true); if (old.index.carbonVersion === carbonVersion) previous = old.index; }
     catch { /* A missing/invalid old sidecar is not a license to trust old raw files. Fetch anew. */ }
   }
-  const directory = join(corpus.dir, 'resources');
-  await mkdir(directory, { recursive: true });
-  if (!(await realpath(directory)).startsWith((await realpath(corpus.dir)) + sep)) throw new Error('Resource write directory escapes corpus');
-  await mkdir(join(directory, 'raw'), { recursive: true });
-  if (!(await realpath(join(directory, 'raw'))).startsWith((await realpath(directory)) + sep)) throw new Error('Raw directory escapes resource store');
+  const directory = await ensureCacheDirectory(corpus.dir, 'resources');
+  const temporaryRelative = `resources/.manifest-${randomUUID()}.tmp`, temporary = join(corpus.dir, temporaryRelative);
+  // Match the reader's no-descendant-symlinks policy, including inside-root and
+  // dangling links. Preflight fixed publication targets before any artifact write
+  // or download; digest-named targets are checked as soon as their bytes are known.
+  await checkCacheTarget(corpus.dir, 'resources/raw', 'directory');
+  for (const relative of ['resources/manifest.json', 'resources/.gitignore', temporaryRelative]) await checkCacheTarget(corpus.dir, relative, 'file');
+  await ensureCacheDirectory(corpus.dir, 'resources/raw');
   await writeFile(join(directory, '.gitignore'), '*\n', { flag: 'wx', mode: 0o600 }).catch(e => { if ((e as NodeJS.ErrnoException).code !== 'EEXIST') throw e; });
   const grouped = new Map<string, ResourceModule[]>();
   for (const m of modules) if (m.endpointKey) grouped.set(m.endpointKey, [...(grouped.get(m.endpointKey) ?? []), m]);
@@ -181,14 +186,25 @@ export async function refreshResources(options: RefreshResourceOptions = {}) {
   const indexText = JSON.stringify(index), snapshot = sha256(indexText);
   await immutableFile(corpus, `resources/${snapshot}.json`, indexText, RESOURCE_STORE_LIMITS.indexBytes);
   const manifest = resourceManifestSchema.parse({ version: 1, snapshot, corpusSnapshot: corpus.snapshot, carbonVersion });
-  const temporary = join(directory, `.manifest-${randomUUID()}.tmp`);
+  let temporaryCreated = false;
   try {
+    await checkCacheTarget(corpus.dir, temporaryRelative, 'file');
     await writeFile(temporary, JSON.stringify(manifest), { flag: 'wx', mode: 0o600 });
+    temporaryCreated = true;
     await options.beforePublish?.();
     const current = await openCorpus(corpus.dir);
     if (current.snapshot !== corpus.snapshot || current.index.provenance.carbonVersion !== carbonVersion) throw new Error('Corpus changed during resource import; previous sidecar retained. Retry against stable corpus.');
+    await checkCacheTarget(corpus.dir, temporaryRelative, 'file');
+    await checkCacheTarget(corpus.dir, 'resources/manifest.json', 'file');
     await rename(temporary, join(directory, 'manifest.json'));
-  } finally { await rm(temporary, { force: true }); }
+    temporaryCreated = false;
+  } finally {
+    // Never delete a pre-existing collision or follow a replaced parent on cleanup.
+    if (temporaryCreated) {
+      await checkCacheTarget(corpus.dir, temporaryRelative, 'file');
+      await rm(temporary, { force: true });
+    }
+  }
   // Exact-target readback verifies the published manifest and all index identities.
   const verified = await loadResourceIndex(await openCorpus(corpus.dir));
   if (verified.snapshot !== snapshot) throw new Error('Concurrent resource publication replaced this run');

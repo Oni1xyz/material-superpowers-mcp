@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
+import { rename, rm, writeFile } from 'node:fs/promises';
+import { cacheRoot, checkCacheTarget, readCacheFile } from './files.js';
 import { resolve, join } from 'node:path';
 import { z } from 'zod';
 import { allowedSources, sourceCatalog, validateSourceUrl, type DocSource } from './sources.js';
@@ -13,9 +14,7 @@ export type Cache = z.infer<typeof cacheSchema>;
 export const missingCacheMessage = 'Official documentation cache is missing or invalid. Run npm run refresh-cache explicitly (network access required), then retry. No official excerpts are bundled.';
 export async function readCache(dir = defaultCacheDir()): Promise<Cache> {
   try {
-    const file = join(dir, 'documents.json');
-    if ((await stat(file)).size > 4000000) throw new Error('Cache exceeds size limit');
-    const cache = cacheSchema.parse(JSON.parse(await readFile(file,'utf8')));
+    const cache = cacheSchema.parse(JSON.parse(await readCacheFile(dir, 'documents.json', 4000000)));
     const seen = new Set<string>();
     for (const doc of cache.documents) {
       validateSourceUrl(doc.url);
@@ -38,7 +37,8 @@ export async function refreshCache(dir: string, importer: Importer, sources: rea
     documents.push(documentSchema.parse({...source,text:fetched.text,sha256:sha256(fetched.text),fetchedAt:new Date().toISOString(),extractionMethod:fetched.method}));
   }
   const cache = cacheSchema.parse({version:1,documents});
-  await mkdir(dir,{recursive:true});
+  dir = await cacheRoot(dir, true);
+  await checkCacheTarget(dir, 'documents.json', 'file');
   const temporary = join(dir, `.documents-${randomUUID()}.tmp`);
   try {
     await writeFile(temporary, JSON.stringify(cache,null,2)+'\n',{flag:'wx',mode:0o600});

@@ -1,6 +1,16 @@
 // Fixed executable template. User input enters only via a JSON data declaration.
 export const runnerSource = String.raw`
 function assert(condition, message) { if (!condition) throw new Error(message); }
+function requestSample(value) {
+  try {
+    const parsed = new URL(value);
+    return (parsed.origin + parsed.pathname).slice(0, 256);
+  } catch { return '[invalid URL]'; }
+}
+function reportError(error) {
+  // Playwright navigation errors include the original URL in their call log.
+  return String(error).replace(/\b(?:https?|wss?):\/\/[^\s"'<>]+/g, requestSample).slice(0, 2000);
+}
 
 // Playwright has no public unrouteWebSocket API. Keep exactly one fail-closed
 // blocker per context, but detach all per-run recording state in finally.
@@ -18,20 +28,51 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
     socketGuard = { active: null, ready: null };
     socketGuards.set(context, socketGuard);
     socketGuard.ready = context.routeWebSocket('**/*', async socket => {
-      if (socketGuard.active) socketGuard.active.push(socket.url());
+      if (socketGuard.active) socketGuard.active(socket.url());
       // Never connectToServer: even same-origin sockets are prohibited.
       await socket.close();
     });
   }
   assert(socketGuard.active === null, 'NETWORK-ISOLATION requires sequential runs in a dedicated context');
   const blockedRequests = [];
-  socketGuard.active = blockedRequests;
+  let blockedRequestCount = 0;
+  let recording = true;
+  const recordBlocked = value => {
+    if (!recording) return;
+    blockedRequestCount++;
+    if (blockedRequests.length >= 100) return;
+    // Never retain credentials, query strings or fragments. Bound every sample
+    // as well as the shared HTTP/WebSocket sample count; paths can still be sensitive.
+    blockedRequests.push(requestSample(value));
+  };
+  socketGuard.active = recordBlocked;
   const guard = async route => {
     const request = new URL(route.request().url());
     if (request.origin !== destination.origin) {
-      blockedRequests.push(request.href);
+      recordBlocked(request.href);
       await route.abort('blockedbyclient');
-    } else await route.continue();
+      return;
+    }
+    // route.continue() only intercepts the first URL: browser redirects bypass
+    // the hook. Fetch exactly one hop and reject ALL 3xx responses (including
+    // same-origin redirects and 304); never give a redirect to the browser.
+    let response;
+    try {
+      response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: 10000 });
+    } catch {
+      // Fail closed on fetch/timeout errors, without logging URL-bearing errors.
+      recordBlocked(request.href);
+      await route.abort('blockedbyclient');
+      return;
+    }
+    try {
+      if (response.status() >= 300 && response.status() < 400) {
+        recordBlocked(request.href);
+        await route.abort('blockedbyclient');
+      } else await route.fulfill({ response });
+    } finally {
+      await response.dispose();
+    }
   };
   const results = [];
   const screenshots = [];
@@ -210,7 +251,7 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
           const evidence = await gates[check.id]();
           results.push({ id: check.id, breakpoint: viewport.name, status: 'passed', evidence });
         } catch (error) {
-          results.push({ id: check.id, breakpoint: viewport.name, status: 'failed', error: String(error) });
+          results.push({ id: check.id, breakpoint: viewport.name, status: 'failed', error: reportError(error) });
         }
       }
       if (screenshotPath) {
@@ -220,7 +261,7 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
         screenshots.push({ breakpoint: viewport.name, path, status: 'captured-not-compared', baseline: null });
       }
     }
-    if (blockedRequests.length) results.push({ id: 'NETWORK-ISOLATION', status: 'failed', blockedRequests });
+    if (blockedRequestCount) results.push({ id: 'NETWORK-ISOLATION', status: 'failed', blockedRequests, blockedRequestCount, omittedBlockedRequestCount: blockedRequestCount - blockedRequests.length });
     return {
       status: results.some(r => r.status === 'failed') ? 'failed' : 'automated-checks-passed-manual-outstanding',
       results,
@@ -229,6 +270,7 @@ export async function runGeneratedPlan(page, { url, AxeBuilder, screenshotPath }
       limitations: specification.limitations,
     };
   } finally {
+    recording = false;
     socketGuard.active = null;
     await context.unroute('**/*', guard);
   }

@@ -1,6 +1,6 @@
-import { constants } from 'node:fs';
-import { mkdir, open, realpath, rename, rm, writeFile } from 'node:fs/promises';
-import { join, resolve, sep } from 'node:path';
+import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import { cacheRoot, checkCacheTarget, confinedPath, ensureCacheDirectory, readCacheFile } from './files.js';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { defaultCacheDir, missingCacheMessage, sha256 } from './cache.js';
@@ -42,33 +42,8 @@ export type PublicationInfo = z.infer<typeof provenanceSchema> & {
     routeInventory?: z.infer<typeof routeInventorySchema>;
 };
 export const searchTerms = (text: string) => [...new Set((text.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}-]{1,99}/gu) ?? []))].sort();
-/** Input paths never become filenames: the validated index maps paths to
- * fixed digest filenames. Realpath confinement additionally rejects symlinks. */
-export async function boundedLocalRead(root: string, relative: string, max: number): Promise<string> {
-    const base = await realpath(root), file = await realpath(join(base, relative));
-    if (!file.startsWith(base + sep))
-        throw new Error('Cache file escapes configured directory');
-    const handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW);
-    try {
-        const st = await handle.stat();
-        if (!st.isFile() || st.size > max)
-            throw new Error('Cache file exceeds size limit');
-        const bytes = Buffer.alloc(st.size + 1);
-        let size = 0;
-        while (size < bytes.length) {
-            const r = await handle.read(bytes, size, bytes.length - size, null);
-            if (!r.bytesRead)
-                break;
-            size += r.bytesRead;
-        }
-        if (size > max || size > st.size)
-            throw new Error('Cache changed during read');
-        return bytes.subarray(0, size).toString('utf8');
-    }
-    finally {
-        await handle.close();
-    }
-}
+/** Fixed digest filenames plus shared nonsymlink, nonblocking descriptor reads. */
+export const boundedLocalRead = readCacheFile;
 function preflightIndex(raw: unknown) {
     const fields = objectFields(raw), take = arrayBudget('Corpus index', 250000);
     for (const entry of take(fields.documents, 2000)) {
@@ -212,7 +187,10 @@ export async function publishCorpus(dir: string, documents: CorpusDocument[], in
     if (Buffer.byteLength(indexText) > 16000000)
         throw new Error('Index size limit');
     const snapshot = sha256(indexText);
-    await mkdir(join(dir, 'snapshots'), { recursive: true });
+    dir = await cacheRoot(dir, true);
+    await ensureCacheDirectory(dir, 'snapshots');
+    await checkCacheTarget(dir, `snapshots/${snapshot}`, 'directory');
+    await checkCacheTarget(dir, 'manifest.json', 'file');
     const staging = join(dir, 'snapshots', `.staging-${randomUUID()}`), manifestTemp = join(dir, `.manifest-${randomUUID()}.tmp`);
     await mkdir(staging);
     try {
@@ -232,6 +210,8 @@ export async function publishCorpus(dir: string, documents: CorpusDocument[], in
                 if (sha256(await boundedLocalRead(dir, `snapshots/${snapshot}/${file.file}`, 8000000)) !== sha256(file.text))
                     throw new Error('Existing snapshot document corrupted');
         }
+        await confinedPath(dir, `snapshots/${snapshot}`);
+        await checkCacheTarget(dir, 'manifest.json', 'file');
         const manifest = manifestSchema.parse({ version: 2, snapshot, indexSha256: snapshot, carbonVersion: info.carbonVersion, createdAt: new Date().toISOString() });
         await writeFile(manifestTemp, JSON.stringify(manifest) + '\n', { flag: 'wx', mode: 0o600 });
         await rename(manifestTemp, join(dir, 'manifest.json'));

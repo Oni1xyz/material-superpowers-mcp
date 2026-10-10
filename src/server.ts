@@ -7,6 +7,7 @@ import { planningTools } from './tools/planning.js';
 import { makeResourceTools } from './tools/resources.js';
 import { makeKnowledgeTools } from './tools/knowledge.js';
 import { navigationInstructions } from './graph/instructions.js';
+import { parseToolInput } from './security/input.js';
 export const allTools: ToolDefinition[] = [...docsTools,...makeResourceTools(),...makeKnowledgeTools(),...designTools,...planningTools];
 
 /** Serialize only bounded JSON data. Checking JSON.stringify(result).length is
@@ -72,9 +73,8 @@ function boundedJson(value:unknown):string {
 }
 export async function executeTool(tool: ToolDefinition, input: unknown): Promise<CallToolResult> {
   try {
-    const parsed=tool.inputSchema.safeParse(input);
-    if(!parsed.success) throw new Error('Invalid input: '+parsed.error.issues.slice(0,8).map(i=>`${i.path.join('.')||'input'}: ${i.message}`).join('; '));
-    const result=await tool.run(parsed.data);
+    const parsed=parseToolInput(tool.inputSchema,input);
+    const result=await tool.run(parsed);
     const value=result!==null && typeof result==='object' && !Array.isArray(result)?result:{result};
     const text=boundedJson(value);
     // Return exactly the serialized data, not a potentially larger original graph
@@ -91,8 +91,10 @@ export function createServer() {
   for(const tool of allTools) {
     server.registerTool(tool.name,{description:tool.description,inputSchema:tool.inputSchema.shape,annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}},async (input: unknown)=>executeTool(tool,input));
   }
-  // Override SDK dispatch so the original strict Zod object validates unmodified
-  // arguments and every tool validation failure obeys the same bounded error contract.
+  // Override SDK dispatch so preflight runs before tool-schema Zod validation,
+  // retaining the original strict object and the bounded error contract. SDK
+  // envelope validation/JSON decoding happens earlier: its stdio buffer has a
+  // separate default 10 MiB limit, not a protection supplied by our preflight.
   server.server.setRequestHandler(CallToolRequestSchema, async request => {
     const tool=allTools.find(candidate=>candidate.name===request.params.name);
     if(!tool)return {isError:true,content:[{type:'text' as const,text:'Unknown tool; call tools/list for the supported names'}]};
