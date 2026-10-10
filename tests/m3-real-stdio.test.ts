@@ -29,7 +29,7 @@ it.runIf(process.env.MATERIAL_REAL_CACHE_TEST==='1')('real imported M3 snapshot 
  const client=new Client({name:'m3-real-integration',version:'1.0.0'}),transport=new StdioClientTransport({command:process.execPath,args:['dist/index.js'],cwd:resolve('.'),env:{...process.env,MATERIAL_CACHE_DIR:corpus.dir},stderr:'pipe'});let stderr='';transport.stderr?.on('data',chunk=>stderr+=chunk.toString());
  const observations:any[]=[];
  try{
-  await client.connect(transport);expect((await client.listTools()).tools).toHaveLength(12);
+  await client.connect(transport);expect((await client.listTools()).tools).toHaveLength(13);
   const call=async(name:string,args:Record<string,unknown>)=>{const result=await client.callTool({name,arguments:args});expect(result.isError,JSON.stringify(result)).not.toBe(true);return result.structuredContent as any;};
   const status=await call('material_coverage_status',{includeDetails:true});expect(status.knowledge).toEqual(coverage.knowledge);expect(status.gaps.unresolvedResourceCount).toBe(status.gaps.unresolvedResources.length);
   if(process.env.MATERIAL_REAL_RESOURCE_TEST==='1') {

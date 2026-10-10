@@ -6,6 +6,7 @@ const inputs={
   material_search_docs:{query:'button accessibility',limit:2},
   material_read_doc:{path:'components/buttons/overview',maxCharacters:500},
   material_coverage_status:{},
+  material_navigate:{query:'date input',limit:3},
   material_read_spec:{path:'styles/spacing/tokens',limit:3},
   material_get_context:{task:'button typography',mode:'implementation',maxSources:2,maxCharacters:1000},
   material_generate_tokens:{seedColor:'#6750A4',mode:'both'},
@@ -26,9 +27,11 @@ const results=[];
 try {
   await client.connect(transport);
   const {tools}=await client.listTools();
-  assert.equal(tools.length,12);assert.deepEqual(tools.map(t=>t.name).sort(),Object.keys(inputs).sort());
+  assert.equal(tools.length,13);assert.deepEqual(tools.map(t=>t.name).sort(),Object.keys(inputs).sort());
   for(const tool of tools) {
     const result=await client.callTool({name:tool.name,arguments:inputs[tool.name]});
+    const missingGraph=tool.name==='material_navigate' && result.isError && JSON.stringify(result).includes('Knowledge graph unavailable:') && JSON.stringify(result).includes('ENOENT');
+    if(missingGraph&&!process.argv.includes('--require-knowledge')){results.push({name:tool.name,status:'expected-missing-graph',note:'Run npm run build-knowledge after importing sources.'});continue;}
     const missing=result.isError && ((tool.name.match(/material_(search_docs|read_doc|get_context|coverage_status|read_spec)$/) && JSON.stringify(result).includes('npm run refresh-cache')) || (tool.name === 'material_read_spec' && JSON.stringify(result).includes('Resource sidecar missing:')));
     if(missing&&!process.argv.includes('--require-cache'))results.push({name:tool.name,status:'expected-missing-cache',note:'Run npm run refresh-cache and npm run refresh-resources, then npm run smoke -- --require-cache for real source calls.'});
     else {assert.notEqual(result.isError,true,`${tool.name}: ${JSON.stringify(result)}`);assert.ok(result.content.length);assert.ok(result.structuredContent);results.push({name:tool.name,status:'ok'});}

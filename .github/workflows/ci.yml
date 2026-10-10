@@ -22,7 +22,7 @@ jobs:
       - run: npm run build
       - run: npx --no-install playwright install --with-deps chromium
       - run: npm test
-      - run: npx --no-install tsc --noEmit --strict --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext evals/run-ui.ts tests/planning-focus.test.ts scripts/import-official.ts scripts/refresh-cache.ts scripts/refresh-resources.ts scripts/m3-resources/index.ts scripts/m3-resources/probe.ts
+      - run: npx --no-install tsc --noEmit --strict --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext evals/run-ui.ts tests/planning-focus.test.ts scripts/import-official.ts scripts/refresh-cache.ts scripts/refresh-resources.ts scripts/m3-resources/index.ts scripts/m3-resources/probe.ts scripts/build-knowledge.ts
       - run: npm run evals
       - run: npm run smoke
       - run: npm run evals:ui
