@@ -1,32 +1,64 @@
 # Material Superpowers MCP
 
-A local, unofficial Material 3 toolkit for coding agents. Generate brand-adapted tokens and component recipes, retrieve cached official documentation, review source, and emit an executable UI evaluation plan. Browser tests run separately—not inside MCP tool calls.
+Give your coding agent Material guidance, brand-derived tokens, and runnable UI checks—not just another documentation search.
 
-Repository: https://github.com/Oni1xyz/material-superpowers-mcp
+![FIELDWORK: a real agent-built expedition planner shown on desktop and mobile, with light and dark themes.](docs/media/fieldwork-hero.png)
 
-## What exists
+**The agent builds the interface. The MCP supplies the guidance, tokens, recipes and review.** FIELDWORK is a working, fictional expedition planner built with real calls to this server—not a bundled app generator or a claim of measured design uplift.
 
-Thirteen stdio tools:
+[Watch the walkthrough](docs/media/fieldwork-demo.gif) · [Download MP4](docs/media/fieldwork-demo.mp4) · [Run the example](#try-the-showcase) · [How it was built](examples/fieldwork/BUILD-NOTES.md) · [Connect your agent](#connect-an-mcp-client)
 
-| Tool | Capability |
-| --- | --- |
-| `material_navigate` | Search task-entry notes and follow local wikilinks/backlinks to guidance and unresolved resources |
-| `material_search_docs` | Search the local official-source cache |
-| `material_read_doc` | Read a cached page or heading with provenance |
-| `material_get_context` | Gather bounded, cited excerpts for a task |
-| `material_coverage_status` | Separate article, numeric-resource, implementation and evaluation coverage |
-| `material_read_spec` | Paginate locally imported numeric token alternatives with exact page selection and provenance |
-| `material_generate_tokens` | Material Color Utilities HCT schemes, light/dark, CSS roles and contrast calculations |
-| `material_map_brand_to_tokens` | Deterministic brand-role mapping with warnings |
-| `material_component_recipe` | Plain HTML/CSS/JS for button, card, navigation, chip, text field, dialog, snackbar and list |
-| `material_review_ui_code` | Bounded heuristic findings with evidence, fixes and uncertainty |
-| `material_review_tokens` | Role/contrast/style-token checks |
-| `material_plan_screen` | Authored screen patterns and explicit unresolved requirements |
-| `material_generate_eval_plan` | Structured checks, manual checklist, and executable Playwright module |
+<details>
+<summary>Watch: guidance, tokens, working UI, and an actual review correction (21 seconds)</summary>
 
-These are deterministic tools, not a second hidden LLM. The calling agent interprets requirements and performs implementation. Profiles and recipes are authored adaptations, not official Google components or a guarantee of full M3 Expressive fidelity. Unsupported platforms and variants fail explicitly; React code generation is not implemented.
+![Edited walkthrough of FIELDWORK: terrain filtering, dark theme, trip details, saved routes and packing progress, followed by the documented semantic-color refactor.](docs/media/fieldwork-demo.gif)
 
-## Install and verify
+Edited browser captures plus a documented review result—not a real-time build recording. [Text transcript and capture instructions](docs/media/README.md).
+
+</details>
+
+## Why use it?
+
+- **Find the relevant guidance.** Navigate task-oriented wikilinks to cached official sources instead of searching disconnected pages. Follow source citations and see unresolved specification gaps.
+- **Start with usable design decisions.** Generate light/dark HCT color roles from your brand, map palettes, and retrieve plain HTML/CSS/JS component recipes.
+- **Check the implementation.** Review source for heuristic issues and emit a Playwright evaluation plan. Execute the browser checks separately; manual review still matters.
+
+Local stdio · No API keys or hidden model calls · Offline tools after explicit source import · MIT code
+
+Unofficial and not endorsed by Google. Authored recipes are adaptations, not official Google components or complete M3 Expressive implementations.
+
+## Try the showcase
+
+FIELDWORK includes responsive layouts, light/dark themes and working interactions. Its expedition content is fictional demo data, not travel advice. It needs no MCP connection or build step to browse:
+
+```sh
+git clone https://github.com/Oni1xyz/material-superpowers-mcp.git
+cd material-superpowers-mcp
+python3 -m http.server 8788 --bind 127.0.0.1 --directory examples/fieldwork
+```
+
+Open <http://127.0.0.1:8788/>. The example source and [build notes](examples/fieldwork/BUILD-NOTES.md) separate agent-authored implementation from actual MCP contributions. The curated README images are captured from the runnable example; private traces and raw QA artifacts are not published.
+
+## Quickstart
+
+Use Node 24.21.0 or a newer 24.x patch. From the cloned repository:
+
+```sh
+npm ci --ignore-scripts --engine-strict
+npm run build
+```
+
+Then [configure your MCP client](#connect-an-mcp-client) to launch `dist/index.js`. Token, recipe, review and planning tools work without a documentation cache. For source retrieval and wikilink navigation, run the explicit imports:
+
+```sh
+npm run refresh-cache
+npm run refresh-resources
+npm run build-knowledge
+```
+
+Numeric-resource coverage is partial and reported explicitly. For a network-disabled runtime, use the [Docker instructions](#docker-runtime). Nothing is installed into your agent's global configuration automatically.
+
+## Developer verification
 
 Use supported Node 24 LTS (24.21.0 or a newer 24.x patch), or the pinned Docker image. Use the exact lockfile; install lifecycle scripts remain disabled.
 
@@ -143,6 +175,28 @@ docker run --rm -i --network none --read-only --cap-drop ALL \
 
 Without the mount, non-docs tools work and docs tools return the missing-cache error. The runtime image does not run crawlers or browsers.
 
+## Tool reference
+
+Thirteen stdio tools:
+
+| Tool | Capability |
+| --- | --- |
+| `material_navigate` | Search task-entry notes and follow local wikilinks/backlinks to guidance and unresolved resources |
+| `material_search_docs` | Search the local official-source cache |
+| `material_read_doc` | Read a cached page or heading with provenance |
+| `material_get_context` | Gather bounded, cited excerpts for a task |
+| `material_coverage_status` | Separate article, numeric-resource, implementation and evaluation coverage |
+| `material_read_spec` | Paginate locally imported numeric token alternatives with exact page selection and provenance |
+| `material_generate_tokens` | Material Color Utilities HCT schemes, light/dark, CSS roles and contrast calculations |
+| `material_map_brand_to_tokens` | Deterministic brand-role mapping with warnings |
+| `material_component_recipe` | Plain HTML/CSS/JS for button, card, navigation, chip, text field, dialog, snackbar and list |
+| `material_review_ui_code` | Bounded heuristic findings with evidence, fixes and uncertainty |
+| `material_review_tokens` | Role/contrast/style-token checks |
+| `material_plan_screen` | Authored screen patterns and explicit unresolved requirements |
+| `material_generate_eval_plan` | Structured checks, manual checklist, and executable Playwright module |
+
+These are deterministic tools, not a second hidden LLM. The calling agent interprets requirements and performs implementation. Profiles and recipes are authored adaptations, not official Google components or a guarantee of full M3 Expressive fidelity. Unsupported platforms and variants fail explicitly; React code generation is not implemented.
+
 ## Security and limitations
 
 - Tool handlers have no shell, browser, model calls, or network access.
@@ -155,7 +209,8 @@ Without the mount, non-docs tools work and docs tools return the missing-cache e
 
 ## Development
 
-Latest increment: [wikilink graph verification](docs/wikilink-verification.md).
+Security review: [findings, fixes and verification limits](docs/security-review.md).
+Knowledge navigation: [wikilink graph verification](docs/wikilink-verification.md).
 Corpus and numeric-resource coverage: [knowledge verification and remaining scope](docs/knowledge-verification.md).
 Roadmap: [comprehensive M3 scope](docs/plans/comprehensive-m3-scope.md).
 Original plan: [implementation and acceptance](docs/plans/implementation.md).
